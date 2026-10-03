@@ -1,751 +1,995 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CustomerCare — Passenger Complaints & Refunds</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        navy: { 50:'#f0f4f8', 100:'#d9e2ec', 200:'#bcccdc', 300:'#9fb3c8', 400:'#829ab1', 500:'#627d98', 600:'#486581', 700:'#334e68', 800:'#243b53', 900:'#102a43' },
-                        accent: { 500:'#1a5276', 600:'#154360', 700:'#0e2f44' },
-                        gold: { 400:'#f6c343', 500:'#d4a017', 600:'#b8860b' }
-                    },
-                    fontFamily: {
-                        sans: ['DM Sans', 'sans-serif'],
-                        display: ['Oswald', 'sans-serif']
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        html { scroll-behavior: smooth; }
-        body { font-family: 'DM Sans', sans-serif; }
-        .font-display { font-family: 'Oswald', sans-serif; }
-        @keyframes fadeUp {
-            0% { opacity: 0; transform: translateY(20px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
-        .fade-up { animation: fadeUp 0.8s ease-out forwards; }
-        .fade-up-delay-1 { animation: fadeUp 0.8s ease-out 0.15s forwards; opacity: 0; }
-        .fade-up-delay-2 { animation: fadeUp 0.8s ease-out 0.3s forwards; opacity: 0; }
-        .fade-up-delay-3 { animation: fadeUp 0.8s ease-out 0.45s forwards; opacity: 0; }
-
-        @keyframes plane {
-            0% { transform: translateX(-100%) translateY(10px); opacity: 0; }
-            10% { opacity: 0.15; }
-            90% { opacity: 0.15; }
-            100% { transform: translateX(100vw) translateY(-10px); opacity: 0; }
-        }
-        .plane-fly { animation: plane 12s linear infinite; }
-
-        input:focus, textarea:focus, select:focus {
-            outline: none;
-            border-color: #1a5276;
-            box-shadow: 0 0 0 3px rgba(26, 82, 118, 0.12);
-        }
-
-        .toast-enter { animation: toastIn 0.4s ease-out forwards; }
-        @keyframes toastIn {
-            0% { opacity: 0; transform: translateY(-10px) scale(0.95); }
-            100% { opacity: 1; transform: translateY(0) scale(1); }
-        }
-        .toast-exit { animation: toastOut 0.3s ease-in forwards; }
-        @keyframes toastOut {
-            0% { opacity: 1; transform: translateY(0) scale(1); }
-            100% { opacity: 0; transform: translateY(-10px) scale(0.95); }
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        .spinner { animation: spin 0.7s linear infinite; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>E travel and Booking — Book Bus & Matatu Tickets Across Kenya & EA</title>
+<meta name="description" content="Kenya's premier bus and SACCO booking platform. 4NTE, Mololine, 2NK, Kinatwa Tec, Modern Coast, Dreamliner, Tahmeed & more. Pay via M-Pesa.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0e1a;--bg2:#0f1526;--card:#141b30;--card2:#1a2340;
+  --line:#243052;--txt:#eef2ff;--mut:#8b97c4;
+  --acc:#ffc61a;--acc2:#ff8a00;--grn:#00e08f;--red:#ff4d6a;--blu:#4d8dff;
+  --r:16px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--txt);overflow-x:hidden;line-height:1.5}
+body::before{content:"";position:fixed;inset:0;z-index:-1;
+  background:radial-gradient(1000px 500px at 85% -10%,rgba(255,138,0,.14),transparent 60%),
+             radial-gradient(900px 500px at -10% 20%,rgba(77,141,255,.12),transparent 60%),
+             radial-gradient(700px 500px at 50% 110%,rgba(0,224,143,.08),transparent 60%)}
+svg{display:block;flex-shrink:0}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,select{font-family:inherit}
+.wrap{max-width:1180px;margin:0 auto;padding:0 18px}
+/* NAV */
+header{position:sticky;top:0;z-index:50;background:rgba(10,14,26,.94);border-bottom:1px solid var(--line);backdrop-filter:blur(8px)}
+.nav{display:flex;align-items:center;justify-content:space-between;height:60px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.1rem;letter-spacing:.3px}
+.logo svg{filter:drop-shadow(0 0 8px rgba(255,198,26,.5))}
+.logo b{color:var(--acc)}
+.navlinks{display:flex;gap:22px;font-size:.88rem;color:var(--mut)}
+.navlinks a{color:inherit;text-decoration:none;transition:.25s}
+.navlinks a:hover{color:var(--acc)}
+.navcta{display:flex;gap:8px;align-items:center}
+.iconbtn{width:40px;height:40px;border-radius:12px;background:var(--card);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;transition:.25s}
+.iconbtn:hover{border-color:var(--acc);transform:translateY(-2px)}
+#burger{display:none}
+#mobmenu{display:none;flex-direction:column;gap:0;border-top:1px solid var(--line);background:var(--bg2)}
+#mobmenu a{padding:14px 18px;color:var(--mut);text-decoration:none;border-bottom:1px solid var(--line)}
+#mobmenu.open{display:flex;animation:slidein .3s ease}
+@keyframes slidein{from{opacity:0;transform:translateY(-8px)}to{opacity:1}}
+@media(max-width:860px){.navlinks{display:none}#burger{display:flex}}
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:14px;font-weight:700;font-size:.92rem;transition:.3s;position:relative;overflow:hidden}
+.btn-p{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#1a1200;box-shadow:0 6px 24px rgba(255,170,0,.35)}
+.btn-p:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(255,170,0,.5)}
+.btn-o{border:1.5px solid var(--line);color:var(--txt);background:var(--card)}
+.btn-o:hover{border-color:var(--acc);color:var(--acc)}
+.btn-g{background:rgba(0,224,143,.15);color:var(--grn);border:1px solid rgba(0,224,143,.3)}
+.btn:active{transform:scale(.97)}
+/* HERO */
+.hero{padding:60px 0 40px;text-align:center;position:relative}
+.badge{display:inline-flex;align-items:center;gap:8px;padding:7px 16px;border-radius:99px;border:1px solid var(--line);background:var(--card);font-size:.78rem;color:var(--mut);margin-bottom:20px;animation:pop .6s ease}
+.badge .dot{width:8px;height:8px;border-radius:50%;background:var(--grn);animation:pulse 1.6s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(0,224,143,.6)}50%{box-shadow:0 0 0 7px rgba(0,224,143,0)}}
+.hero h1{font-size:clamp(1.9rem,5.5vw,3.2rem);font-weight:900;line-height:1.12;animation:rise .7s ease}
+.hero h1 span{background:linear-gradient(90deg,var(--acc),var(--acc2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{color:var(--mut);max-width:620px;margin:14px auto 28px;font-size:.98rem;animation:rise .8s ease}
+@keyframes rise{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+@keyframes pop{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:scale(1)}}
+/* TICKET CARD */
+.ticket{background:linear-gradient(180deg,var(--card2),var(--card));border:1px solid var(--line);border-radius:22px;padding:24px;max-width:960px;margin:0 auto;box-shadow:0 20px 60px rgba(0,0,0,.45);animation:rise .9s ease}
+.tgrid{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:end}
+.field label{display:block;font-size:.7rem;text-transform:uppercase;letter-spacing:1.2px;color:var(--mut);margin-bottom:6px;font-weight:700}
+.field{position:relative}
+.field .ficon{position:absolute;left:13px;bottom:12px;color:var(--acc);pointer-events:none}
+.sel,.inp{width:100%;padding:12px 12px 12px 40px;background:var(--bg2);border:1.5px solid var(--line);border-radius:13px;color:var(--txt);font-size:.92rem;outline:none;transition:.25s;appearance:none}
+select.sel{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%238b97c4' stroke-width='2.4'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
+.sel:focus,.inp:focus{border-color:var(--acc);box-shadow:0 0 0 3px rgba(255,198,26,.15)}
+.swap{align-self:center;width:44px;height:44px;border-radius:50%;background:var(--card);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;transition:.35s}
+.swap:hover{transform:rotate(180deg);border-color:var(--acc);color:var(--acc)}
+.trow2{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px}
+@media(max-width:700px){.tgrid{grid-template-columns:1fr}.swap{margin:-6px auto}.trow2{grid-template-columns:1fr 1fr}.trow2 .f3{grid-column:span 2}.ticket{padding:18px}}
+@media(max-width:420px){.trow2{grid-template-columns:1fr}.trow2 .f3{grid-column:span 1}}
+/* QUICK ROUTES */
+.qroutes{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:18px}
+.qr{padding:6px 14px;border-radius:99px;border:1px solid var(--line);background:var(--card);color:var(--mut);font-size:.78rem;font-weight:600;cursor:pointer;transition:.25s;white-space:nowrap}
+.qr:hover{border-color:var(--acc);color:var(--acc);transform:translateY(-2px)}
+/* VEHICLE CATS */
+.sec{padding:50px 0}
+.sechead{text-align:center;margin-bottom:30px}
+.sechead h2{font-size:clamp(1.4rem,3.5vw,2.1rem);font-weight:800}
+.sechead p{color:var(--mut);margin-top:6px;font-size:.92rem}
+.cats{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.cat{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:20px;transition:.35s;cursor:pointer;position:relative;overflow:hidden}
+.cat::after{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,198,26,.08),transparent 50%);opacity:0;transition:.35s}
+.cat:hover,.cat.on{transform:translateY(-6px);border-color:var(--acc)}
+.cat:hover::after,.cat.on::after{opacity:1}
+.cat.on{box-shadow:0 12px 34px rgba(255,170,0,.18)}
+.cat .cico{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,rgba(255,198,26,.15),rgba(255,138,0,.08));display:flex;align-items:center;justify-content:center;color:var(--acc);margin-bottom:12px}
+.cat h3{font-size:1rem;margin-bottom:4px}
+.cat p{color:var(--mut);font-size:.82rem}
+.cat .price{margin-top:12px;font-weight:800;color:var(--acc);font-size:1.05rem}
+.cat .price small{color:var(--mut);font-weight:500;font-size:.7rem}
+/* SACCO MARQUEE */
+.marq{overflow:hidden;border-block:1px solid var(--line);background:var(--bg2);padding:16px 0;margin:10px 0}
+.mtrack{display:flex;gap:40px;white-space:nowrap;animation:scroll 38s linear infinite;width:max-content}
+.marq:hover .mtrack{animation-play-state:paused}
+@keyframes scroll{to{transform:translateX(-50%)}}
+.mitem{display:flex;align-items:center;gap:10px;color:var(--mut);font-weight:600;font-size:.88rem}
+.mitem svg{color:var(--acc)}
+/* RESULTS */
+.rescard{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:flex;gap:14px;align-items:center;flex-wrap:wrap;transition:.3s;animation:rise .5s ease both}
+.rescard:hover{border-color:var(--acc);transform:translateX(4px)}
+.rescard:nth-child(2){animation-delay:.08s}.rescard:nth-child(3){animation-delay:.16s}.rescard:nth-child(4){animation-delay:.24s}
+.saccobadge{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.68rem;background:linear-gradient(135deg,var(--acc),var(--acc2));color:#1a1200;text-align:center;line-height:1.1;flex-shrink:0}
+.resinfo{flex:1;min-width:180px}
+.resinfo h4{font-size:.98rem}
+.resinfo .meta{display:flex;gap:14px;color:var(--mut);font-size:.8rem;margin-top:5px;flex-wrap:wrap}
+.meta span{display:inline-flex;align-items:flex-start;gap:5px}
+.resprice{text-align:right;white-space:nowrap}
+.resprice .amt{font-weight:800;font-size:1.2rem;color:var(--acc)}
+.resprice small{display:block;color:var(--mut);font-size:.7rem}
+.tag{display:inline-block;padding:3px 10px;border-radius:99px;font-size:.66rem;font-weight:700;letter-spacing:.5px}
+.tag-g{background:rgba(0,224,143,.12);color:var(--grn)}
+.tag-b{background:rgba(77,141,255,.12);color:var(--blu)}
+.tag-y{background:rgba(255,198,26,.12);color:var(--acc)}
+.tag-r{background:rgba(255,77,106,.12);color:var(--red)}
+/* STAGES PILLS */
+.stagesrow{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.stagepill{padding:3px 10px;border-radius:99px;font-size:.68rem;font-weight:600;background:var(--bg2);border:1px solid var(--line);color:var(--mut)}
+.stagepill.first{border-color:var(--grn);color:var(--grn)}
+.stagepill.last{border-color:var(--acc);color:var(--acc)}
+/* PICKUP HIGHLIGHT */
+.pickupbox{background:var(--bg);border:1px solid var(--line);border-left:3px solid var(--acc);border-radius:10px;padding:8px 12px;margin-top:8px;font-size:.8rem;color:var(--txt);display:flex;gap:8px;align-items:flex-start}
+.pickupbox svg{flex-shrink:0;margin-top:2px;color:var(--acc)}
+.pickupbox em{font-style:normal;color:var(--mut);font-size:.72rem;display:block;margin-top:2px}
+/* AMENITIES */
+.amenrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.amen{display:flex;align-items:center;gap:4px;font-size:.7rem;color:var(--mut);padding:3px 8px;border-radius:8px;background:var(--bg2)}
+.amen svg{flex-shrink:0}
+/* MODAL */
+.modal{position:fixed;inset:0;z-index:100;display:none;align-items:flex-end;justify-content:center;background:rgba(4,7,15,.7);backdrop-filter:blur(4px)}
+.modal.open{display:flex;animation:fadein .25s}
+@keyframes fadein{from{opacity:0}}
+.sheet{background:var(--bg2);border:1px solid var(--line);border-radius:24px 24px 0 0;width:100%;max-width:640px;max-height:92vh;overflow-y:auto;padding:24px;animation:up .35s cubic-bezier(.2,.9,.3,1.1)}
+@keyframes up{from{transform:translateY(60px);opacity:0}}
+@media(min-width:700px){.modal{align-items:center;padding:20px}.sheet{border-radius:24px}}
+.shhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.shhead h3{font-size:1.15rem}
+/* SEATS */
+.busvisual{background:var(--bg);border:1px solid var(--line);border-radius:16px;padding:16px;margin:12px 0}
+.busfront{display:flex;align-items:center;gap:8px;color:var(--mut);font-size:.7rem;margin-bottom:12px;padding-left:4px}
+.seatgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;max-width:320px;margin:0 auto}
+.seat{aspect-ratio:1;border-radius:9px;border:1.5px solid var(--line);background:var(--card);display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;transition:.2s;color:var(--mut)}
+.seat.taken{background:rgba(255,77,106,.12);border-color:rgba(255,77,106,.4);color:var(--red);cursor:not-allowed}
+.seat:not(.taken):hover{border-color:var(--acc);transform:scale(1.1)}
+.seat.sel{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#1a1200;border-color:transparent;box-shadow:0 4px 14px rgba(255,170,0,.4)}
+.legend{display:flex;gap:16px;justify-content:center;margin-top:12px;font-size:.7rem;color:var(--mut);flex-wrap:wrap}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:4px;margin-right:5px;vertical-align:-1px}
+/* STEPS */
+.steps{display:flex;gap:6px;margin-bottom:20px}
+.step{flex:1;height:4px;border-radius:99px;background:var(--line);transition:.4s}
+.step.on{background:linear-gradient(90deg,var(--acc),var(--acc2))}
+.step.done{background:var(--grn)}
+/* MPESA */
+.mpesabox{background:linear-gradient(135deg,rgba(0,224,143,.08),rgba(0,180,120,.04));border:1px solid rgba(0,224,143,.3);border-radius:16px;padding:16px}
+.paybillrow{display:flex;align-items:center;gap:12px;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-top:8px}
+.paybillrow b{color:var(--grn);font-size:1rem;letter-spacing:1px}
+.copybtn{margin-left:auto;color:var(--acc);display:flex;gap:5px;font-size:.76rem;font-weight:700;align-items:center;cursor:pointer}
+.sumrow{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px dashed var(--line);font-size:.88rem;color:var(--mut)}
+.sumrow b{color:var(--txt)}
+.sumrow.total b{color:var(--acc);font-size:1.1rem}
+/* LIVE */
+.livedot{width:8px;height:8px;border-radius:50%;background:var(--grn);animation:pulse 1.6s infinite;display:inline-block;margin-right:8px}
+.feeditem{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--line);animation:rise .5s ease}
+.feeditem .fico{width:34px;height:34px;border-radius:10px;background:var(--card2);display:flex;align-items:center;justify-content:center;color:var(--acc);flex-shrink:0}
+.feeditem .ft{font-size:.86rem}
+.feeditem .ftime{font-size:.68rem;color:var(--mut);margin-top:3px}
+/* STAT */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-top:36px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px;text-align:center}
+.stat b{font-size:1.5rem;font-weight:800;color:var(--acc);display:block}
+.stat span{color:var(--mut);font-size:.76rem}
+/* MY TRIPS */
+.mytrips{max-width:960px;margin:0 auto}
+.tripcard{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin-bottom:12px;display:flex;gap:14px;align-items:center}
+.tripcard .tref{font-weight:800;color:var(--acc);font-size:.9rem}
+.tripcard .tdet{flex:1;font-size:.82rem;color:var(--mut)}
+.tripcard .tdet b{color:var(--txt);font-weight:700}
+.tripcard .tstatus{padding:4px 12px;border-radius:99px;font-size:.68rem;font-weight:700}
+/* PASSENGER FORM */
+.paxfield{margin-bottom:12px}
+.paxfield label{display:block;font-size:.72rem;text-transform:uppercase;letter-spacing:1px;color:var(--mut);font-weight:700;margin-bottom:5px}
+.paxfield input{width:100%;padding:11px 14px;background:var(--bg);border:1.5px solid var(--line);border-radius:12px;color:var(--txt);font-size:.92rem;outline:none;transition:.25s}
+.paxfield input:focus{border-color:var(--acc);box-shadow:0 0 0 3px rgba(255,198,26,.15)}
+/* FOOTER */
+footer{border-top:1px solid var(--line);padding:40px 0 28px;margin-top:36px;color:var(--mut);font-size:.82rem}
+.fgrid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:28px}
+@media(max-width:700px){.fgrid{grid-template-columns:1fr}}
+footer h5{color:var(--txt);margin-bottom:10px;font-size:.88rem}
+footer a{color:var(--mut);text-decoration:none;display:block;padding:3px 0;transition:.2s}
+footer a:hover{color:var(--acc)}
+.toast{position:fixed;bottom:24px;left:50%;transform:translate(-50%,80px);background:var(--grn);color:#032015;font-weight:700;padding:12px 22px;border-radius:14px;transition:.4s cubic-bezier(.2,.9,.3,1.2);z-index:200;box-shadow:0 10px 30px rgba(0,224,143,.35);opacity:0;max-width:90vw;text-align:center;font-size:.88rem}
+.toast.show{transform:translate(-50%,0);opacity:1}
+.reveal{opacity:0;transform:translateY(30px);transition:.7s cubic-bezier(.2,.8,.3,1)}
+.reveal.vis{opacity:1;transform:none}
+.hidden{display:none!important}
+.sectionline{display:flex;align-items:center;gap:8px;color:var(--acc);font-size:.76rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px}
+.emptyres{text-align:center;padding:40px 20px;color:var(--mut)}
+.emptyres svg{margin:0 auto 12px}
+.emptyres h3{color:var(--txt);font-size:1.1rem;margin-bottom:6px}
+@media(max-width:480px){.rescard{flex-direction:column;align-items:stretch}.resprice{text-align:left;margin-top:8px}.saccobadge{align-self:flex-start}}
+</style>
 </head>
-<body class="bg-navy-50 text-navy-900 min-h-screen flex flex-col">
+<body>
 
-    <!-- Toast Container -->
-    <div id="toast-container" class="fixed top-6 right-6 z-[999] flex flex-col gap-3"></div>
-
-    <!-- Top Bar -->
-    <div class="bg-navy-900 text-white text-xs py-2 px-6 sm:px-10 flex items-center justify-between">
-        <div class="flex items-center gap-4">
-            
-            <span class="hidden sm:flex items-center gap-1.5"><i data-lucide="mail" class="w-3 h-3"></i> refundcustomerservicehelpdesk@gmail.com</span>
-        </div>
-        <div class="flex items-center gap-3">
-            <span class="hidden md:inline opacity-70">Complaint Reference No.</span>
-            <span class="bg-navy-700 px-2 py-0.5 rounded text-[10px] font-mono tracking-wider" id="ref-number">SL-2025-000000</span>
-        </div>
+<header>
+  <div class="wrap nav">
+    <div class="logo">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ffc61a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="12" rx="2"/><circle cx="7" cy="19" r="1.6"/><circle cx="17" cy="19" r="1.6"/><path d="M2 11h20M9 5v6M15 5v6"/></svg>
+      E-Travel<b>Link</b> EA
     </div>
-
-    <!-- Header -->
-    <header class="bg-white border-b border-navy-100 sticky top-0 z-50 shadow-sm">
-        <div class="max-w-7xl mx-auto px-6 sm:px-10 py-4 flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-navy-900 rounded-lg flex items-center justify-center">
-                    <i data-lucide="plane" class="w-5 h-5 text-white -rotate-45"></i>
-                </div>
-                <div>
-                    <h1 class="font-display text-xl sm:text-2xl font-semibold tracking-tight leading-none text-navy-900">CustomerCare</h1>
-                    <p class="text-[9px] tracking-[0.25em] uppercase text-navy-400 font-medium">Passenger Complaints & Refunds Portal</p>
-                </div>
-            </div>
-            <nav class="hidden md:flex items-center gap-6 text-sm text-navy-600">
-                <a href="#apology" class="hover:text-navy-900 transition-colors">Our Apology</a>
-                <a href="#form-section" class="hover:text-navy-900 transition-colors">File a Complaint</a>
-                <a href="#process" class="hover:text-navy-900 transition-colors">Process</a>
-                <a href="#faq" class="hover:text-navy-900 transition-colors">FAQ</a>
-            </nav>
-            <button id="mobile-menu-btn" class="md:hidden p-2 text-navy-600 hover:text-navy-900">
-                <i data-lucide="menu" class="w-5 h-5"></i>
-            </button>
-        </div>
-        <div id="mobile-menu" class="hidden md:hidden border-t border-navy-100 bg-white px-6 pb-4">
-            <a href="#apology" class="block py-2.5 text-sm text-navy-600 hover:text-navy-900 border-b border-navy-50">Our Apology</a>
-            <a href="#form-section" class="block py-2.5 text-sm text-navy-600 hover:text-navy-900 border-b border-navy-50">File a Complaint</a>
-            <a href="#process" class="block py-2.5 text-sm text-navy-600 hover:text-navy-900 border-b border-navy-50">Process</a>
-            <a href="#faq" class="block py-2.5 text-sm text-navy-600 hover:text-navy-900">FAQ</a>
-        </div>
-    </header>
-
-    <!-- Hero / Apology Section -->
-    <section id="apology" class="relative bg-navy-900 text-white overflow-hidden">
-        <div class="absolute inset-0 opacity-5">
-            <div class="plane-fly absolute top-1/3 left-0">
-                <i data-lucide="plane" class="w-16 h-16 text-white -rotate-45"></i>
-            </div>
-        </div>
-        <div class="absolute top-0 right-0 w-96 h-96 bg-navy-700 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 opacity-30"></div>
-        <div class="absolute bottom-0 left-0 w-72 h-72 bg-navy-600 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2 opacity-20"></div>
-
-        <div class="relative max-w-4xl mx-auto px-6 sm:px-10 py-16 sm:py-24 text-center">
-            <div class="fade-up inline-flex items-center gap-2 bg-navy-800/60 border border-navy-600/40 rounded-full px-4 py-1.5 mb-6">
-                <i data-lucide="shield-check" class="w-4 h-4 text-gold-400"></i>
-                <span class="text-xs tracking-wider uppercase text-navy-200">Official Complaints Portal</span>
-            </div>
-
-            <h2 class="fade-up-delay-1 font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light tracking-tight leading-tight mb-6">
-                We Are Truly <span class="text-gold-400 font-medium">Sorry</span><br>For Your Experience
-            </h2>
-
-            <p class="fade-up-delay-2 text-navy-300 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed mb-8">
-                 Every passenger's comfort and satisfaction is our highest priority. We sincerely apologize for any inconvenience you may have experienced during your journey with us. Your feedback helps us do better.
-            </p>
-
-            <div class="fade-up-delay-3 flex flex-col sm:flex-row items-center justify-center gap-4">
-                <a href="#form-section" class="bg-white text-navy-900 px-8 py-3.5 rounded-lg text-sm font-semibold tracking-wide hover:bg-navy-50 transition-colors flex items-center gap-2 shadow-lg">
-                    <i data-lucide="file-text" class="w-4 h-4"></i>
-                    FILE A COMPLAINT
-                </a>
-                <a href="#process" class="border border-navy-500 text-navy-200 px-8 py-3.5 rounded-lg text-sm font-medium tracking-wide hover:bg-navy-800 transition-colors flex items-center gap-2">
-                    <i data-lucide="info" class="w-4 h-4"></i>
-                    LEARN MORE
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Apology Cards -->
-    <section class="bg-white border-b border-navy-100">
-        <div class="max-w-6xl mx-auto px-6 sm:px-10 py-12 sm:py-16">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="text-center p-6 rounded-xl bg-navy-50/50 border border-navy-100 hover:shadow-md transition-shadow">
-                    <div class="w-14 h-14 bg-navy-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i data-lucide="heart-handshake" class="w-6 h-6 text-navy-600"></i>
-                    </div>
-                    <h3 class="font-display text-lg font-medium tracking-tight mb-2">Our Sincere Apologies</h3>
-                    <p class="text-sm text-navy-500 leading-relaxed">We understand how frustrating travel disruptions can be, and we are genuinely sorry for letting you down.</p>
-                </div>
-                <div class="text-center p-6 rounded-xl bg-navy-50/50 border border-navy-100 hover:shadow-md transition-shadow">
-                    <div class="w-14 h-14 bg-navy-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i data-lucide="ear" class="w-6 h-6 text-navy-600"></i>
-                    </div>
-                    <h3 class="font-display text-lg font-medium tracking-tight mb-2">We Are Listening</h3>
-                    <p class="text-sm text-navy-500 leading-relaxed">Every complaint is reviewed personally by our customer relations team. Your voice matters to us.</p>
-                </div>
-                <div class="text-center p-6 rounded-xl bg-navy-50/50 border border-navy-100 hover:shadow-md transition-shadow">
-                    <div class="w-14 h-14 bg-navy-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i data-lucide="badge-check" class="w-6 h-6 text-navy-600"></i>
-                    </div>
-                    <h3 class="font-display text-lg font-medium tracking-tight mb-2">Fair Resolution</h3>
-                    <p class="text-sm text-navy-500 leading-relaxed">We are committed to providing fair and timely resolutions, including full or partial refunds where applicable.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ============================================ -->
-    <!-- COMPLAINT FORM — Connected to Web3Forms      -->
-    <!-- ============================================ -->
-    <section id="form-section" class="bg-navy-50 py-12 sm:py-20">
-        <div class="max-w-3xl mx-auto px-6 sm:px-10">
-
-            <div class="text-center mb-10">
-                <p class="text-xs tracking-[0.2em] uppercase text-navy-400 font-medium mb-2">Complaint Form</p>
-                <h2 class="font-display text-2xl sm:text-3xl font-light tracking-tight mb-3">Tell Us What Happened</h2>
-                <p class="text-sm text-navy-500 max-w-lg mx-auto">Please fill out the form below with as much detail as possible. All fields marked with <span class="text-red-500">*</span> are required.</p>
-            </div>
-
-            <!--
-                WEB3FORMS INTEGRATION POINTS:
-                1. action="https://api.web3forms.com/submit"
-                2. method="POST"
-                3. Hidden input: access_key
-                4. Hidden input: subject (email subject line)
-                5. Hidden input: botcheck (spam trap — must stay empty)
-                6. Every visible field has a "name" attribute — Web3Forms uses these as labels
-            -->
-            <form id="complaint-form" action="https://api.web3forms.com/submit" method="POST">
-
-                <!-- ===== Web3Forms Hidden Fields ===== -->
-                <!-- REPLACE the value below with YOUR access key from web3forms.com -->
-                <input type="hidden" name="access_key" value="82efac60-681d-4beb-ac13-17c5719f00f7">
-                <!-- This controls the email subject line you'll see in your inbox -->
-                <input type="hidden" name="subject" value="New AirCanada Complaint — Ref #SL-2025">
-                <!-- Spam trap: bots fill hidden fields, humans don't. If filled, Web3Forms blocks it. -->
-                <input type="checkbox" name="botcheck" class="hidden" style="display:none">
-
-                <!-- Form Header (visual only) -->
-                <div class="bg-navy-900 px-6 sm:px-8 py-5 flex items-center gap-3 rounded-t-2xl">
-                    <i data-lucide="clipboard-list" class="w-5 h-5 text-gold-400"></i>
-                    <div>
-                        <h3 class="text-white font-semibold text-sm tracking-wide">PASSENGER COMPLAINT & REFUND REQUEST</h3>
-                        <p class="text-navy-400 text-xs mt-0.5">Form SL-CR-2025 | Confidential</p>
-                    </div>
-                </div>
-
-                <div class="bg-white border-x border-navy-100 px-6 sm:px-8 py-8 space-y-8">
-
-                    <!-- Complaint Type -->
-                    <div>
-                        <label class="block text-sm font-semibold text-navy-800 mb-2">Type of Complaint <span class="text-red-500">*</span></label>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                            <label class="flex items-center gap-3 p-3.5 rounded-lg border-2 border-navy-200 cursor-pointer hover:border-navy-400 transition-colors has-[:checked]:border-navy-900 has-[:checked]:bg-navy-50">
-                                <input type="radio" name="complaint_type" value="Flight Delay" class="accent-navy-900" required>
-                                <div>
-                                    <span class="text-sm font-medium text-navy-800">Flight Delay</span>
-                                    <p class="text-[11px] text-navy-400">Delayed departure or arrival</p>
-                                </div>
-                            </label>
-                            <label class="flex items-center gap-3 p-3.5 rounded-lg border-2 border-navy-200 cursor-pointer hover:border-navy-400 transition-colors has-[:checked]:border-navy-900 has-[:checked]:bg-navy-50">
-                                <input type="radio" name="complaint_type" value="Flight Cancellation" class="accent-navy-900">
-                                <div>
-                                    <span class="text-sm font-medium text-navy-800">Flight Cancellation</span>
-                                    <p class="text-[11px] text-navy-400">Cancelled flight</p>
-                                </div>
-                            </label>
-                            <label class="flex items-center gap-3 p-3.5 rounded-lg border-2 border-navy-200 cursor-pointer hover:border-navy-400 transition-colors has-[:checked]:border-navy-900 has-[:checked]:bg-navy-50">
-                                <input type="radio" name="complaint_type" value="Baggage Issue" class="accent-navy-900">
-                                <div>
-                                    <span class="text-sm font-medium text-navy-800">Baggage Issue</span>
-                                    <p class="text-[11px] text-navy-400">Lost, delayed, or damaged</p>
-                                </div>
-                            </label>
-                            <label class="flex items-center gap-3 p-3.5 rounded-lg border-2 border-navy-200 cursor-pointer hover:border-navy-400 transition-colors has-[:checked]:border-navy-900 has-[:checked]:bg-navy-50">
-                                <input type="radio" name="complaint_type" value="Poor Service" class="accent-navy-900">
-                                <div>
-                                    <span class="text-sm font-medium text-navy-800">Poor Service</span>
-                                    <p class="text-[11px] text-navy-400">In-flight or ground staff</p>
-                                </div>
-                            </label>
-                            <label class="flex items-center gap-3 p-3.5 rounded-lg border-2 border-navy-200 cursor-pointer hover:border-navy-400 transition-colors has-[:checked]:border-navy-900 has-[:checked]:bg-navy-50">
-                                <input type="radio" name="complaint_type" value="Refund Request" class="accent-navy-900">
-                                <div>
-                                    <span class="text-sm font-medium text-navy-800">Refund Request</span>
-                                    <p class="text-[11px] text-navy-400">Ticket or service refund</p>
-                                </div>
-                            </label>
-                            <label class="flex items-center gap-3 p-3.5 rounded-lg border-2 border-navy-200 cursor-pointer hover:border-navy-400 transition-colors has-[:checked]:border-navy-900 has-[:checked]:bg-navy-50">
-                                <input type="radio" name="complaint_type" value="Other" class="accent-navy-900">
-                                <div>
-                                    <span class="text-sm font-medium text-navy-800">Other</span>
-                                    <p class="text-[11px] text-navy-400">Any other concern</p>
-                                </div>
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="border-t border-navy-100"></div>
-
-                    <!-- Flight Details (Optional) -->
-                    <div>
-                        <label class="block text-sm font-semibold text-navy-800 mb-3">Flight Details <span class="text-navy-400 font-normal text-xs">(if applicable)</span></label>
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                            <div>
-                                <label class="block text-xs font-medium text-navy-500 mb-1.5">Booking Reference</label>
-                                <input type="text" name="booking_reference" placeholder="e.g. ABC123" class="w-full px-4 py-3 rounded-lg border-2 border-navy-200 text-sm placeholder:text-navy-300 transition-all">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-medium text-navy-500 mb-1.5">Flight Number</label>
-                                <input type="text" name="flight_number" placeholder="e.g. SL-402" class="w-full px-4 py-3 rounded-lg border-2 border-navy-200 text-sm placeholder:text-navy-300 transition-all">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-medium text-navy-500 mb-1.5">Date of Flight</label>
-                                <input type="date" name="flight_date" class="w-full px-4 py-3 rounded-lg border-2 border-navy-200 text-sm text-navy-600 transition-all">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="border-t border-navy-100"></div>
-
-                    <!-- Passenger Information -->
-                    <div>
-                        <div class="flex items-center gap-2 mb-4">
-                            <i data-lucide="user" class="w-4 h-4 text-navy-400"></i>
-                            <label class="text-sm font-semibold text-navy-800">Passenger Information</label>
-                        </div>
-                        <div class="space-y-4">
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block text-xs font-medium text-navy-500 mb-1.5">Full Name <span class="text-red-500">*</span></label>
-                                    <input type="text" id="passenger_name" name="Full Name" required placeholder="As on your boarding pass" class="w-full px-4 py-3 rounded-lg border-2 border-navy-200 text-sm placeholder:text-navy-300 transition-all">
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-medium text-navy-500 mb-1.5">Phone Number <span class="text-red-500">*</span></label>
-                                    <input type="tel" id="phone_number" name="Phone Number" required placeholder="+1 (555) 000-0000" class="w-full px-4 py-3 rounded-lg border-2 border-navy-200 text-sm placeholder:text-navy-300 transition-all">
-                                </div>
-                            </div>
-                            <div>
-                                <label class="block text-xs font-medium text-navy-500 mb-1.5">Email Address <span class="text-red-500">*</span></label>
-                                <input type="email" id="email" name="Email" required placeholder="you@example.com" class="w-full px-4 py-3 rounded-lg border-2 border-navy-200 text-sm placeholder:text-navy-300 transition-all">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="border-t border-navy-100"></div>
-
-                    <!-- Complaint Summary -->
-                    <div>
-                        <div class="flex items-center gap-2 mb-4">
-                            <i data-lucide="message-square-text" class="w-4 h-4 text-navy-400"></i>
-                            <label class="text-sm font-semibold text-navy-800">Complaint Summary <span class="text-red-500">*</span></label>
-                        </div>
-                        <textarea id="complaint_summary" name="Complaint Summary" required rows="6" placeholder="Please describe your experience in detail. Include what happened, when it occurred, and how it affected you. The more information you provide, the faster we can resolve your concern..." class="w-full px-4 py-3 rounded-lg border-2 border-navy-200 text-sm placeholder:text-navy-300 transition-all resize-vertical leading-relaxed"></textarea>
-                        <div class="flex justify-between mt-1.5">
-                            <p class="text-[11px] text-navy-400">Minimum 30 characters</p>
-                            <p class="text-[11px] text-navy-400"><span id="char-count">0</span>/2000</p>
-                        </div>
-                    </div>
-
-                    <div class="border-t border-navy-100"></div>
-
-                    <!-- Acknowledgement -->
-                    <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 flex gap-3">
-                        <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5"></i>
-                        <div>
-                            <p class="text-sm font-medium text-amber-800 mb-1">Important Notice</p>
-                            <p class="text-xs text-amber-700 leading-relaxed">By submitting this form, you confirm that the information provided is accurate and truthful. Filing a false complaint may result in legal action. Submission does not guarantee a refund — each case is reviewed individually.</p>
-                        </div>
-                    </div>
-
-                    <!-- Checkbox -->
-                    <label class="flex items-start gap-3 cursor-pointer group">
-                        <input type="checkbox" id="agree-terms" class="mt-0.5 accent-navy-900 w-4 h-4">
-                        <span class="text-xs text-navy-500 leading-relaxed group-hover:text-navy-700 transition-colors">I acknowledge that I have read and understood the <a href="#" class="underline text-navy-700 hover:text-navy-900">Terms & Conditions</a> and <a href="#" class="underline text-navy-700 hover:text-navy-900">Privacy Policy</a> of . <span class="text-red-500">*</span></span>
-                    </label>
-
-                    <!-- Submit Buttons -->
-                    <div class="flex flex-col sm:flex-row items-center gap-4 pt-2">
-                        <button type="submit" id="submit-btn" class="w-full sm:w-auto bg-navy-900 text-white px-10 py-4 rounded-lg text-sm font-semibold tracking-wide hover:bg-navy-800 transition-all flex items-center justify-center gap-2 shadow-lg shadow-navy-900/20 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
-                            <i data-lucide="send" class="w-4 h-4" id="submit-icon"></i>
-                            <span id="submit-text">SUBMIT COMPLAINT</span>
-                        </button>
-                        <button type="reset" id="reset-btn" class="w-full sm:w-auto border-2 border-navy-200 text-navy-600 px-8 py-4 rounded-lg text-sm font-medium tracking-wide hover:border-navy-400 hover:text-navy-800 transition-all">
-                            CLEAR FORM
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Bottom border to close the card shape -->
-                <div class="bg-white border-x border-b border-navy-100 rounded-b-2xl h-2"></div>
-            </form>
-        </div>
-    </section>
-
-    <!-- Process Section -->
-    <section id="process" class="bg-white py-12 sm:py-20">
-        <div class="max-w-5xl mx-auto px-6 sm:px-10">
-            <div class="text-center mb-12">
-                <p class="text-xs tracking-[0.2em] uppercase text-navy-400 font-medium mb-2">How It Works</p>
-                <h2 class="font-display text-2xl sm:text-3xl font-light tracking-tight">Our Resolution Process</h2>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <div class="relative text-center">
-                    <div class="w-12 h-12 bg-navy-900 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-sm font-bold">1</div>
-                    <h3 class="font-semibold text-sm mb-1">Submit</h3>
-                    <p class="text-xs text-navy-500 leading-relaxed">Fill out the complaint form with all relevant details</p>
-                    <div class="hidden md:block absolute top-6 left-[60%] w-[80%] border-t-2 border-dashed border-navy-200"></div>
-                </div>
-                <div class="relative text-center">
-                    <div class="w-12 h-12 bg-navy-900 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-sm font-bold">2</div>
-                    <h3 class="font-semibold text-sm mb-1">Review</h3>
-                    <p class="text-xs text-navy-500 leading-relaxed">Our team reviews your case within 2 business days</p>
-                    <div class="hidden md:block absolute top-6 left-[60%] w-[80%] border-t-2 border-dashed border-navy-200"></div>
-                </div>
-                <div class="relative text-center">
-                    <div class="w-12 h-12 bg-navy-900 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-sm font-bold">3</div>
-                    <h3 class="font-semibold text-sm mb-1">Investigate</h3>
-                    <p class="text-xs text-navy-500 leading-relaxed">We gather all necessary information from relevant departments</p>
-                    <div class="hidden md:block absolute top-6 left-[60%] w-[80%] border-t-2 border-dashed border-navy-200"></div>
-                </div>
-                <div class="text-center">
-                    <div class="w-12 h-12 bg-gold-500 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-sm font-bold">4</div>
-                    <h3 class="font-semibold text-sm mb-1">Resolve</h3>
-                    <p class="text-xs text-navy-500 leading-relaxed">Receive your resolution via email within 14 business days</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- CEO Apology -->
-    <section class="bg-navy-900 text-white py-12 sm:py-16">
-        <div class="max-w-3xl mx-auto px-6 sm:px-10 text-center">
-            <div class="w-20 h-20 bg-navy-700 rounded-full flex items-center justify-center mx-auto mb-6 border-2 border-navy-500">
-                <i data-lucide="user-circle" class="w-10 h-10 text-navy-300"></i>
-            </div>
-            <blockquote class="font-display text-lg sm:text-xl font-light leading-relaxed italic mb-6 text-navy-200">
-                "On behalf of everyone at , I want to personally apologize for the experience you've had. We built this airline on the promise of exceptional service, and when we fall short, it hurts all of us. Please know that your complaint is not just a number to us — it is a chance to make things right and ensure it never happens again."
-            </blockquote>
-            <div>
-                <p class="font-semibold text-white text-sm">James R. Whitfield</p>
-                <p class="text-xs text-navy-400">Chief Executive Officer, </p>
-            </div>
-        </div>
-    </section>
-
-    <!-- FAQ Section -->
-    <section id="faq" class="bg-navy-50 py-12 sm:py-20">
-        <div class="max-w-3xl mx-auto px-6 sm:px-10">
-            <div class="text-center mb-10">
-                <p class="text-xs tracking-[0.2em] uppercase text-navy-400 font-medium mb-2">Support</p>
-                <h2 class="font-display text-2xl sm:text-3xl font-light tracking-tight">Frequently Asked Questions</h2>
-            </div>
-            <div class="space-y-3" id="faq-container">
-                <div class="faq-item bg-white rounded-xl border border-navy-100 overflow-hidden">
-                    <button class="faq-toggle w-full flex items-center justify-between px-6 py-4 text-left hover:bg-navy-50/50 transition-colors" onclick="toggleFaq(this)">
-                        <span class="text-sm font-medium text-navy-800 pr-4">How long does it take to process a refund?</span>
-                        <i data-lucide="chevron-down" class="w-4 h-4 text-navy-400 flex-shrink-0 transition-transform duration-200"></i>
-                    </button>
-                    <div class="faq-content hidden px-6 pb-4">
-                        <p class="text-sm text-navy-500 leading-relaxed">We sincerely apologize for the wait. Refund processing typically takes 7–14 business days after your complaint has been reviewed and approved. In some complex cases, it may take up to 30 days. We understand this may feel long, and we are working hard to speed up our processes.</p>
-                    </div>
-                </div>
-                <div class="faq-item bg-white rounded-xl border border-navy-100 overflow-hidden">
-                    <button class="faq-toggle w-full flex items-center justify-between px-6 py-4 text-left hover:bg-navy-50/50 transition-colors" onclick="toggleFaq(this)">
-                        <span class="text-sm font-medium text-navy-800 pr-4">Will I receive updates on my complaint status?</span>
-                        <i data-lucide="chevron-down" class="w-4 h-4 text-navy-400 flex-shrink-0 transition-transform duration-200"></i>
-                    </button>
-                    <div class="faq-content hidden px-6 pb-4">
-                        <p class="text-sm text-navy-500 leading-relaxed">Yes, absolutely. You will receive an automated confirmation email immediately after submission, and our team will send you status updates via email at each stage of the process. You can also contact our helpline with your reference number for real-time updates.</p>
-                    </div>
-                </div>
-                <div class="faq-item bg-white rounded-xl border border-navy-100 overflow-hidden">
-                    <button class="faq-toggle w-full flex items-center justify-between px-6 py-4 text-left hover:bg-navy-50/50 transition-colors" onclick="toggleFaq(this)">
-                        <span class="text-sm font-medium text-navy-800 pr-4">What compensation am I entitled to?</span>
-                        <i data-lucide="chevron-down" class="w-4 h-4 text-navy-400 flex-shrink-0 transition-transform duration-200"></i>
-                    </button>
-                    <div class="faq-content hidden px-6 pb-4">
-                        <p class="text-sm text-navy-500 leading-relaxed">Compensation depends on the nature and severity of the issue. This may include full or partial refunds, travel vouchers, meal allowances, hotel accommodations for overnight delays, or future flight credits. Each case is evaluated individually and fairly.</p>
-                    </div>
-                </div>
-                <div class="faq-item bg-white rounded-xl border border-navy-100 overflow-hidden">
-                    <button class="faq-toggle w-full flex items-center justify-between px-6 py-4 text-left hover:bg-navy-50/50 transition-colors" onclick="toggleFaq(this)">
-                        <span class="text-sm font-medium text-navy-800 pr-4">Can I submit a complaint for someone else?</span>
-                        <i data-lucide="chevron-down" class="w-4 h-4 text-navy-400 flex-shrink-0 transition-transform duration-200"></i>
-                    </button>
-                    <div class="faq-content hidden px-6 pb-4">
-                        <p class="text-sm text-navy-500 leading-relaxed">Yes, you may file on behalf of another passenger, provided you have their consent and accurate details (name as on boarding pass, booking reference, etc.). Please note that all correspondence regarding the complaint will be sent to the email address provided in the form.</p>
-                    </div>
-                </div>
-                <div class="faq-item bg-white rounded-xl border border-navy-100 overflow-hidden">
-                    <button class="faq-toggle w-full flex items-center justify-between px-6 py-4 text-left hover:bg-navy-50/50 transition-colors" onclick="toggleFaq(this)">
-                        <span class="text-sm font-medium text-navy-800 pr-4">What if I'm not satisfied with the resolution?</span>
-                        <i data-lucide="chevron-down" class="w-4 h-4 text-navy-400 flex-shrink-0 transition-transform duration-200"></i>
-                    </button>
-                    <div class="faq-content hidden px-6 pb-4">
-                        <p class="text-sm text-navy-500 leading-relaxed">We are sorry if our initial response does not meet your expectations. You may request an escalation to our Senior Customer Relations team by replying to your resolution email. If the matter remains unresolved, you may also contact the relevant aviation authority in your jurisdiction.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Final CTA -->
-    <section class="bg-white py-12 sm:py-16 border-t border-navy-100">
-        <div class="max-w-2xl mx-auto px-6 sm:px-10 text-center">
-            <i data-lucide="heart" class="w-8 h-8 text-red-400 mx-auto mb-4"></i>
-            <h2 class="font-display text-xl sm:text-2xl font-light tracking-tight mb-3">We Haven't Forgotten About You</h2>
-            <p class="text-sm text-navy-500 leading-relaxed mb-6">If you'd prefer to speak with someone directly, our caring customer support team is available 24/7. We're here to listen, and we're here to help.</p>
-            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-               
-                <a href="mailto:refundcustomerservicehelpdesk@gmail.com" class="border-2 border-navy-200 text-navy-700 px-8 py-3.5 rounded-lg text-sm font-medium tracking-wide hover:border-navy-400 transition-colors flex items-center gap-2">
-                    <i data-lucide="mail" class="w-4 h-4"></i>
-                    EMAIL US
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="bg-navy-900 text-navy-400 mt-auto">
-        <div class="max-w-7xl mx-auto px-6 sm:px-10 py-12">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-10">
-                <div class="md:col-span-2">
-                    <div class="flex items-center gap-2 mb-4">
-                        <div class="w-8 h-8 bg-navy-700 rounded-lg flex items-center justify-center">
-                            <i data-lucide="plane" class="w-4 h-4 text-white -rotate-45"></i>
-                        </div>
-                        <span class="font-display text-lg font-semibold text-white tracking-tight">CustomerCare</span>
-                    </div>
-                    <p class="text-sm leading-relaxed max-w-md mb-4">Connecting people and places since 1987. We are committed to making every journey safe, comfortable, and memorable. When we fall short of that promise, we take full responsibility.</p>
-                    <div class="flex gap-3">
-                        <a href="#" class="w-9 h-9 bg-navy-800 rounded-lg flex items-center justify-center hover:bg-navy-700 transition-colors"><i data-lucide="twitter" class="w-4 h-4 text-navy-300"></i></a>
-                        <a href="#" class="w-9 h-9 bg-navy-800 rounded-lg flex items-center justify-center hover:bg-navy-700 transition-colors"><i data-lucide="facebook" class="w-4 h-4 text-navy-300"></i></a>
-                        <a href="#" class="w-9 h-9 bg-navy-800 rounded-lg flex items-center justify-center hover:bg-navy-700 transition-colors"><i data-lucide="instagram" class="w-4 h-4 text-navy-300"></i></a>
-                        <a href="#" class="w-9 h-9 bg-navy-800 rounded-lg flex items-center justify-center hover:bg-navy-700 transition-colors"><i data-lucide="linkedin" class="w-4 h-4 text-navy-300"></i></a>
-                    </div>
-                </div>
-                <div>
-                    <h4 class="text-xs tracking-[0.2em] uppercase text-navy-300 font-semibold mb-4">Quick Links</h4>
-                    <ul class="space-y-2.5 text-sm">
-                        <li><a href="#" class="hover:text-white transition-colors">Manage Booking</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Flight Status</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Check-In Online</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Baggage Policy</a></li>
-                        <li><a href="#form-section" class="hover:text-white transition-colors">File a Complaint</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="text-xs tracking-[0.2em] uppercase text-navy-300 font-semibold mb-4">Legal</h4>
-                    <ul class="space-y-2.5 text-sm">
-                        <li><a href="#" class="hover:text-white transition-colors">Terms & Conditions</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Privacy Policy</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Cookie Policy</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Passenger Rights</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Accessibility</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="border-t border-navy-800 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-                <p class="text-xs text-navy-500">© 2026 CustomerCare. All rights reserved.</p>
-                <p class="text-xs text-navy-600">ICAO: SKL | IATA: SL | Callsign: CustomerCare</p>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Success Modal -->
-    <div id="success-modal" class="fixed inset-0 z-[998] hidden items-center justify-center p-6">
-        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="closeModal()"></div>
-        <div class="relative bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 text-center transform scale-95 opacity-0 transition-all duration-300" id="modal-content">
-            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-5">
-                <i data-lucide="check-circle-2" class="w-8 h-8 text-green-600"></i>
-            </div>
-            <h3 class="font-display text-2xl font-medium tracking-tight mb-2">Complaint Submitted</h3>
-            <p class="text-sm text-navy-500 leading-relaxed mb-4">We are truly sorry for what you've experienced. Your complaint has been received and our team will begin reviewing it shortly.</p>
-            <div class="bg-navy-50 rounded-lg p-4 mb-6">
-                <p class="text-[10px] tracking-wider uppercase text-navy-400 mb-1">Your Reference Number</p>
-                <p class="font-mono text-lg font-bold text-navy-900 tracking-wider" id="modal-ref">SL-2025-000000</p>
-            </div>
-            <p class="text-xs text-navy-400 mb-6">A confirmation email has been sent to <span class="font-medium text-navy-600" id="modal-email">—</span>. Please keep your reference number for future correspondence.</p>
-            <button onclick="closeModal()" class="bg-navy-900 text-white px-8 py-3 rounded-lg text-sm font-semibold tracking-wide hover:bg-navy-800 transition-colors">
-                GOT IT, THANK YOU
-            </button>
-        </div>
+    <nav class="navlinks">
+      <a href="#book">Book</a><a href="#saccos">Saccos</a><a href="#mytrips">My Trips</a><a href="#live">Live</a><a href="#about">About</a>
+    </nav>
+    <div class="navcta">
+      <button class="iconbtn" id="tripBtn" onclick="showMyTrips()" title="My Trips"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg></button>
+      <button class="iconbtn" id="burger" onclick="document.getElementById('mobmenu').classList.toggle('open')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
     </div>
+  </div>
+  <div id="mobmenu">
+    <a href="#book" onclick="mm()">Book a Trip</a><a href="#saccos" onclick="mm()">Saccos & Bus Companies</a><a href="#mytrips" onclick="mm();showMyTrips()">My Trips</a><a href="#live" onclick="mm()">Live Updates</a><a href="#about" onclick="mm()">About / M-PESA</a>
+  </div>
+</header>
 
-    <!-- ============================================ -->
-    <!-- JavaScript — handles validation, sends to    -->
-    <!-- Web3Forms via fetch, then shows success modal -->
-    <!-- ============================================ -->
-    <script>
-        lucide.createIcons();
+<section class="hero wrap">
+  <div class="badge"><span class="dot"></span> 36+ SACCOs &amp; bus companies live across East Africa</div>
+  <h1>Travel Kenya &amp; East Africa.<br><span>Your Seat. Your Trip. Your Time.</span></h1>
+  <p>Book with Kenya's trusted SACCOs — 4NTE, Mololine, 2NK, Kinatwa Tec, Modern Coast, Dreamliner, Tahmeed and more. Pay via LIPA NA M-PESA.</p>
+</section>
 
-        // ── Reference Number ──
-        function generateRef() {
-            const num = String(Math.floor(100000 + Math.random() * 900000));
-            return `SL-2025-${num}`;
-        }
-        let currentRef = generateRef();
-        document.getElementById('ref-number').textContent = currentRef;
-        document.getElementById('modal-ref').textContent = currentRef;
+<section id="book" class="wrap" style="padding-bottom:10px">
+  <div class="ticket">
+    <div class="tgrid">
+      <div class="field"><label>From</label>
+        <span class="ficon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="10" r="3"/><path d="M12 21c4-5 7-8.5 7-11a7 7 0 1 0-14 0c0 2.5 3 6 7 11z"/></svg></span>
+        <select class="sel" id="fromCity"></select>
+      </div>
+      <button class="swap" onclick="swapCities()" title="Swap"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4l-4 4 4 4M3 8h14M17 20l4-4-4-4M21 16H7"/></svg></button>
+      <div class="field"><label>To</label>
+        <span class="ficon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21c4-5 7-8.5 7-11a7 7 0 1 0-14 0c0 2.5 3 6 7 11z"/><circle cx="12" cy="10" r="2.6"/></svg></span>
+        <select class="sel" id="toCity"></select>
+      </div>
+    </div>
+    <div class="trow2">
+      <div class="field"><label>Travel Date</label>
+        <span class="ficon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></span>
+        <input class="inp" type="date" id="date">
+      </div>
+      <div class="field"><label>Passengers</label>
+        <span class="ficon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+        <select class="sel" id="paxSel">
+          <option value="1">1 Passenger</option><option value="2">2 Passengers</option><option value="3">3 Passengers</option><option value="4">4 Passengers</option><option value="5">5 Passengers</option><option value="6">6 Passengers</option>
+        </select>
+      </div>
+      <div class="field f3"><label>Vehicle Category</label>
+        <span class="ficon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="12" rx="2"/><circle cx="7" cy="19" r="1.6"/><circle cx="17" cy="19" r="1.6"/></svg></span>
+        <select class="sel" id="catSel">
+          <option value="any">Any (Show All)</option>
+          <option value="matatu">SACCO Matatu (14–33 seats)</option>
+          <option value="shuttle">Shuttle / Tour Van</option>
+          <option value="executive">Executive Coach Bus</option>
+          <option value="luxury">Luxury Coach (2+2 Recliner)</option>
+          <option value="vip">VIP Sleeper / Double-Decker</option>
+        </select>
+      </div>
+    </div>
+    <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn btn-p" style="flex:1;justify-content:center" onclick="search()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        Search Trips
+      </button>
+    </div>
+    <div class="qroutes">
+      <button class="qr" onclick="quickR('Nairobi','Mombasa')">Nairobi → Mombasa</button>
+      <button class="qr" onclick="quickR('Nairobi','Nakuru')">Nairobi → Nakuru</button>
+      <button class="qr" onclick="quickR('Nairobi','Kisumu')">Nairobi → Kisumu</button>
+      <button class="qr" onclick="quickR('Nakuru','Kisumu')">Nakuru → Kisumu</button>
+      <button class="qr" onclick="quickR('Nairobi','Eldoret')">Nairobi → Eldoret</button>
+      <button class="qr" onclick="quickR('Nairobi','Thika')">Nairobi → Thika</button>
+      <button class="qr" onclick="quickR('Nairobi','Nyeri')">Nairobi → Nyeri</button>
+      <button class="qr" onclick="quickR('Mombasa','Malindi')">Mombasa → Malindi</button>
+      <button class="qr" onclick="quickR('Nairobi','Kampala (UG)')">Nairobi → Kampala</button>
+    </div>
+  </div>
 
-        // ── Mobile Menu ──
-        const mobileBtn = document.getElementById('mobile-menu-btn');
-        const mobileMenu = document.getElementById('mobile-menu');
-        mobileBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
-        mobileMenu.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', () => mobileMenu.classList.add('hidden'));
-        });
+  <div class="stats reveal">
+    <div class="stat"><b>480+</b><span>Daily Routes</span></div>
+    <div class="stat"><b>36</b><span>SACCOs &amp; Operators</span></div>
+    <div class="stat"><b>90+</b><span>Towns &amp; Cities</span></div>
+    <div class="stat"><b>50%</b><span>Deposit Booking</span></div>
+  </div>
+</section>
 
-        // ── Character Counter ──
-        const textarea = document.getElementById('complaint_summary');
-        const charCount = document.getElementById('char-count');
-        textarea.addEventListener('input', () => {
-            const len = textarea.value.length;
-            charCount.textContent = len;
-            if (len > 2000) {
-                textarea.value = textarea.value.substring(0, 2000);
-                charCount.textContent = 2000;
-            }
-            validateForm();
-        });
+<div class="marq" id="saccos">
+  <div class="mtrack" id="mtrack"></div>
+</div>
 
-        // ── Form Validation ──
-        const agreeCheckbox = document.getElementById('agree-terms');
-        const submitBtn = document.getElementById('submit-btn');
-        const submitText = document.getElementById('submit-text');
-        const submitIcon = document.getElementById('submit-icon');
+<section class="sec wrap">
+  <div class="sechead reveal">
+    <div class="sectionline" style="justify-content:center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="12" rx="2"/><circle cx="7" cy="19" r="1.6"/><circle cx="17" cy="19" r="1.6"/></svg> Fleet Classes</div>
+    <h2>Choose Your Ride</h2>
+    <p>From quick SACCO matatus to VIP sleeper coaches crossing borders</p>
+  </div>
+  <div class="cats" id="catWrap"></div>
+</section>
 
-        agreeCheckbox.addEventListener('change', validateForm);
+<section id="mytrips" class="sec wrap hidden">
+  <div class="sechead">
+    <div class="sectionline" style="justify-content:center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg> My Bookings</div>
+    <h2>Your Trips</h2>
+  </div>
+  <div class="mytrips" id="tripsList"></div>
+</section>
 
-        function validateForm() {
-            const name = document.getElementById('passenger_name').value.trim();
-            const email = document.getElementById('email').value.trim();
-            const phone = document.getElementById('phone_number').value.trim();
-            const summary = textarea.value.trim();
-            const typeChecked = document.querySelector('input[name="complaint_type"]:checked');
-            const isValid = name && email && phone && summary.length >= 30 && typeChecked && agreeCheckbox.checked;
-            submitBtn.disabled = !isValid;
-        }
+<section id="live" class="sec wrap">
+  <div class="sechead reveal">
+    <div class="sectionline" style="justify-content:center"><span class="livedot"></span> Real-Time Feed</div>
+    <h2>Live Trip Updates</h2>
+    <p>Departures, arrivals and SACCO notices updating across the network</p>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px">
+    <div class="rescard" style="flex-direction:column;align-items:stretch" id="liveFeed"></div>
+    <div class="rescard" style="flex-direction:column;align-items:stretch">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <b>Terminal Conditions</b><span class="tag tag-g">OPERATIONAL</span>
+      </div>
+      <div id="terminalList"></div>
+    </div>
+  </div>
+</section>
 
-        ['passenger_name', 'email', 'phone_number'].forEach(id => {
-            document.getElementById(id).addEventListener('input', validateForm);
-        });
-        document.querySelectorAll('input[name="complaint_type"]').forEach(radio => {
-            radio.addEventListener('change', validateForm);
-        });
+<section id="about" class="sec wrap sechead reveal">
+  <h2>Pay With LIPA NA M-PESA</h2>
+  <p style="margin-bottom:22px">One Paybill for all bookings. The account number is specific to the SACCO / operator you choose — always confirm the operator name on your e-ticket before paying.</p>
+  <div class="mpesabox" style="text-align:left;max-width:520px;margin:0 auto">
+    <div style="display:flex;gap:12px;align-items:center">
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#00e08f" stroke-width="2" stroke-linecap="round"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="M2 9h20"/><path d="M6 15h4"/></svg>
+      <div><b style="color:var(--grn)">M-PESA SECURE</b><div style="color:var(--mut);font-size:.78rem">Lipa na M-Pesa — Pay Bill channel</div></div>
+    </div>
+    <div class="paybillrow"><span style="color:var(--mut);font-size:.76rem">PAYBILL</span><b>247247</b><button class="copybtn" onclick="copyTxt('775093')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>Copy</button></div>
+    <div class="paybillrow"><span style="color:var(--mut);font-size:.76rem">ACCOUNT</span><b>SAFARILINK</b><button class="copybtn" onclick="copyTxt('101572011')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>Copy</button></div>
+  </div>
+</section>
 
-        // ── Form Submission → Web3Forms ──
-        const form = document.getElementById('complaint-form');
+<footer>
+  <div class="wrap fgrid">
+    <div>
+      <div class="logo" style="margin-bottom:10px"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffc61a" stroke-width="2"><rect x="2" y="5" width="20" height="12" rx="2"/><circle cx="7" cy="19" r="1.6"/><circle cx="17" cy="19" r="1.6"/><path d="M2 11h20"/></svg> Safari<b>Link</b> EA</div>
+      <p>Kenya's unified booking platform for SACCO matatus and long-distance buses across Kenya, Uganda, Tanzania, Rwanda and South Sudan.</p>
+    </div>
+    <div><h5>Top Saccos</h5><a href="#saccos">4NTE Sacco</a><a href="#saccos">Mololine Sacco</a><a href="#saccos">2NK Sacco</a><a href="#saccos">Kinatwa Tec Sacco</a><a href="#saccos">Easy Coach</a></div>
+    <div><h5>Popular Routes</h5><a href="javascript:quickR('Nairobi','Mombasa')">Nairobi – Mombasa</a><a href="javascript:quickR('Nairobi','Nakuru')">Nairobi – Nakuru</a><a href="javascript:quickR('Nakuru','Kisumu')">Nakuru – Kisumu</a><a href="javascript:quickR('Nairobi','Kampala (UG)')">Nairobi – Kampala</a><a href="javascript:quickR('Nairobi','Kisumu')">Nairobi – Kisumu</a></div>
+  </div>
+  <div class="wrap" style="margin-top:22px;border-top:1px solid var(--line);padding-top:16px;text-align:center">© 2025 SafariLink EA. Fares shown are operator-standard rates.</div>
+</footer>
 
-        form.addEventListener('submit', async function (e) {
-            e.preventDefault();
-            if (submitBtn.disabled) return;
+<!-- BOOKING MODAL -->
+<div class="modal" id="modal" onclick="if(event.target===this)closeModal()">
+  <div class="sheet">
+    <div class="shhead"><h3 id="shTitle">Select Your Seats</h3>
+      <button class="iconbtn" onclick="closeModal()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+    </div>
+    <div class="steps"><div class="step on" id="s1"></div><div class="step" id="s2"></div><div class="step" id="s3"></div><div class="step" id="s4"></div></div>
+    <div id="stepSeat"></div>
+    <div id="stepPax" class="hidden"></div>
+    <div id="stepPay" class="hidden"></div>
+    <div id="stepDone" class="hidden"></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
 
-            // Show loading state
-            submitBtn.disabled = true;
-            submitText.textContent = 'SUBMITTING...';
-            submitIcon.classList.add('spinner');
+<script>
+/* ===== FIXED PAYMENT ===== */
+const PAYBILL="775093";
+const ACCOUNT="101572011";
 
-            // Build FormData from the form (picks up every named input)
-            const formData = new FormData(form);
+/* ===== TOWNS ===== */
+const TOWNS=["Nairobi","Mombasa","Kisumu","Nakuru","Eldoret","Thika","Malindi","Kitale","Garissa","Kakamega",
+"Nyeri","Nanyuki","Kericho","Bungoma","Kisii","Kilifi","Machakos","Meru","Embu","Naivasha","Narok","Voi",
+"Lodwar","Maralal","Mandera","Wajir","Moyale","Isiolo","Marsabit","Vihiga","Siaya","Homa Bay","Migori",
+"Bomet","Sotik","Litein","Nyahururu","Karatina","Othaya","Makueni","Kitui","Mwingi","Mtwapa","Ukunda",
+"Lamu","Hola","Murang'a","Rongai","Eldama Ravine","Kapsabet","Kabarnet","Iten",
+"Limuru","Kiambu","Ruiru","Athi River","Namanga","Loitokitok","Kilgoris","Isebania","Webuye","Busia","Ahero",
+"Malaba","Bungoma","Mtito Andei","Mariakani","Gilgil","Kijabe","Kenol",
+"Kampala (UG)","Entebbe (UG)","Jinja (UG)","Gulu (UG)","Mbarara (UG)","Malaba (UG)",
+"Arusha (TZ)","Moshi (TZ)","Dar es Salaam (TZ)","Mwanza (TZ)","Dodoma (TZ)","Tanga (TZ)","Zanzibar (TZ)",
+"Kigali (RW)","Butare (RW)","Musanze (RW)","Bujumbura (BI)","Juba (SS)","Addis Ababa (ET)"];
 
-            // Inject the live reference number into the email payload
-            formData.set('subject', `New AirCanada Complaint — Ref ${currentRef}`);
+/* ===== AMENITIES BY TYPE ===== */
+const AMENITIES={
+  matatu:["Frequent departures","Luggage space"],
+  shuttle:["AC","Door-to-door"],
+  executive:["Reclining seats","USB charging","Reading lights","Onboard attendant"],
+  luxury:["WiFi","Recliner 2+2","Snacks","USB charging","Extra legroom","AC"],
+  vip:["WiFi","Sleeper seats","Meals","USB charging","Blanket","AC","Entertainment"]
+};
+const AMEN_SVG=`<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>`;
 
-            try {
-                const response = await fetch(form.action, {
-                    method: 'POST',
-                    body: formData
-                });
+/* ===== SACCO DATA WITH ROUTES, PICKUPS, STAGES ===== */
+const SD=[
+ {n:"4NTE Sacco",sn:"4NTE",hq:"Nairobi",t:"matatu",rt:4.2,fl:"33-seater matatus",routes:[
+  {f:"Nairobi",t:"Nakuru",pk:"4NTE Stage, Accra Road (Beba Beba Terminal), Nairobi CBD",dp:"4NTE Desk, Nakuru Main Bus Park",st:["Limuru","Kijabe","Naivasha","Gilgil"],fa:800,dur:"2h 30m"},
+  {f:"Nairobi",t:"Eldoret",pk:"4NTE Stage, Accra Road (Beba Beba Terminal), Nairobi CBD",dp:"4NTE Desk, Eldoret Main Stage",st:["Naivasha","Nakuru","Eldama Ravine"],fa:1500,dur:"5h 00m"},
+  {f:"Nairobi",t:"Kisumu",pk:"4NTE Stage, Accra Road (Beba Beba Terminal), Nairobi CBD",dp:"4NTE Desk, Kisumu Bus Park",st:["Naivasha","Nakuru","Kericho","Ahero"],fa:1200,dur:"6h 00m"},
+  {f:"Nakuru",t:"Kisumu",pk:"4NTE Desk, Nakuru Main Bus Park",dp:"4NTE Desk, Kisumu Bus Park",st:["Kericho","Ahero"],fa:700,dur:"3h 30m"},
+ ]},
+ {n:"Mololine Sacco",sn:"Mololine",hq:"Nakuru",t:"matatu",rt:4.3,fl:"33-seater matatus",routes:[
+  {f:"Nakuru",t:"Nairobi",pk:"Mololine Stage, Nakuru Main Bus Park",dp:"Mololine/Prestige Stage, Tsavo Road near Latema Road, Nairobi",st:["Gilgil","Naivasha","Kijabe","Limuru"],fa:800,dur:"2h 30m"},
+  {f:"Nakuru",t:"Kericho",pk:"Mololine Stage, Nakuru Main Bus Park",dp:"Mololine Desk, Kericho Bus Park",st:["Molo","Mau Narok"],fa:500,dur:"2h 00m"},
+  {f:"Nakuru",t:"Kisumu",pk:"Mololine Stage, Nakuru Main Bus Park",dp:"Mololine Desk, Kisumu Main Bus Park",st:["Kericho","Ahero"],fa:700,dur:"3h 30m"},
+  {f:"Nakuru",t:"Eldoret",pk:"Mololine Stage, Nakuru Main Bus Park",dp:"Mololine Desk, Eldoret Bus Park",st:["Eldama Ravine"],fa:600,dur:"2h 30m"},
+  {f:"Nakuru",t:"Bungoma",pk:"Mololine Stage, Nakuru Main Bus Park",dp:"Mololine Desk, Bungoma Bus Park",st:["Eldoret","Webuye"],fa:900,dur:"4h 00m"},
+  {f:"Nakuru",t:"Kakamega",pk:"Mololine Stage, Nakuru Main Bus Park",dp:"Mololine Desk, Kakamega Bus Park",st:["Eldoret","Webuye"],fa:850,dur:"4h 00m"},
+  {f:"Nakuru",t:"Nyahururu",pk:"Mololine Stage, Nakuru Main Bus Park",dp:"Mololine Desk, Nyahururu Stage",st:["Molo","Ol Kalou"],fa:400,dur:"1h 45m"},
+  {f:"Nairobi",t:"Kericho",pk:"Mololine/Prestige Stage, Tsavo Road near Latema Road, Nairobi",dp:"Mololine Desk, Kericho Bus Park",st:["Naivasha","Nakuru"],fa:1100,dur:"4h 00m"},
+  {f:"Nairobi",t:"Kisumu",pk:"Mololine House, Nyamakima, Nairobi",dp:"Mololine Desk, Kisumu Main Bus Park",st:["Naivasha","Nakuru","Kericho","Ahero"],fa:1300,dur:"6h 00m"},
+ ]},
+ {n:"2NK Sacco",sn:"2NK",hq:"Nyeri",t:"matatu",rt:4.5,fl:"14-seater & 33-seater matatus",routes:[
+  {f:"Nyeri",t:"Nairobi",pk:"2NK Lower Stage, Gakere Road (Mbaki House HQ), Nyeri",dp:"2NK Nyamakima Booking Office, Nairobi CBD",st:["Karatina","Thika","Ruiru"],fa:600,dur:"2h 45m"},
+  {f:"Nyeri",t:"Nakuru",pk:"2NK Lower Stage, Gakere Road (Mbaki House HQ), Nyeri",dp:"2NK Nakuru Booking Office, Nakuru Town",st:["Karatina","Ol Kalou"],fa:500,dur:"2h 30m"},
+  {f:"Nyeri",t:"Nanyuki",pk:"2NK Lower Stage, Gakere Road (Mbaki House HQ), Nyeri",dp:"2NK Stage, Nanyuki Town",st:["Naro Moru","Chaka"],fa:300,dur:"1h 15m"},
+  {f:"Karatina",t:"Nairobi",pk:"2NK Stage, Karatina Town",dp:"2NK Nyamakima Booking Office, Nairobi CBD",st:["Thika","Ruiru"],fa:500,dur:"2h 15m"},
+  {f:"Thika",t:"Nairobi",pk:"2NK Stage, Thika Town",dp:"2NK Nyamakima Booking Office, Nairobi CBD",st:["Ruiru","Juja"],fa:250,dur:"1h 00m"},
+  {f:"Nairobi",t:"Nanyuki",pk:"2NK Nyamakima Booking Office, Nairobi CBD",dp:"2NK Stage, Nanyuki Town",st:["Thika","Karatina","Nyeri"],fa:800,dur:"3h 30m"},
+  {f:"Nakuru",t:"Thika",pk:"2NK Nakuru Booking Office, Nakuru Town",dp:"2NK Stage, Thika Town",st:["Karatina"],fa:450,dur:"2h 15m"},
+ ]},
+ {n:"Kinatwa Tec Sacco",sn:"Kinatwa",hq:"Murang'a",t:"matatu",rt:4.1,fl:"14-seater matatus",routes:[
+  {f:"Murang'a",t:"Nairobi",pk:"Kinatwa Stage, Kenol, Murang'a",dp:"Kinatwa Stage, Accra Road, Nairobi",st:["Thika","Ruiru"],fa:400,dur:"2h 00m"},
+  {f:"Thika",t:"Nairobi",pk:"Kinatwa Stage, Thika Town",dp:"Kinatwa Stage, Accra Road, Nairobi",st:["Ruiru","Juja"],fa:250,dur:"1h 00m"},
+  {f:"Nairobi",t:"Nakuru",pk:"Kinatwa Stage, Accra Road, Nairobi",dp:"Kinatwa Desk, Nakuru Main Bus Park",st:["Thika","Nyahururu"],fa:900,dur:"3h 30m"},
+ ]},
+ {n:"Endsleigh Sacco",sn:"Endsleigh",hq:"Nyeri",t:"matatu",rt:4.0,fl:"33-seater matatus",routes:[
+  {f:"Nyeri",t:"Nairobi",pk:"Endsleigh Booking Office, Nyeri Town",dp:"Endsleigh Stage, Nyamakima, Nairobi",st:["Karatina","Thika"],fa:600,dur:"2h 45m"},
+  {f:"Nyeri",t:"Nakuru",pk:"Endsleigh Booking Office, Nyeri Town",dp:"Endsleigh Desk, Nakuru Main Bus Park",st:["Karatina","Ol Kalou"],fa:500,dur:"2h 30m"},
+  {f:"Nanyuki",t:"Nairobi",pk:"Endsleigh Stage, Nanyuki Town",dp:"Endsleigh Stage, Nyamakima, Nairobi",st:["Nyeri","Karatina","Thika"],fa:800,dur:"3h 30m"},
+ ]},
+ {n:"Super Metro Sacco",sn:"SuperMetro",hq:"Nairobi",t:"matatu",rt:3.9,fl:"33-seater matatus",routes:[
+  {f:"Nairobi",t:"Limuru",pk:"Super Metro Terminal, Railways, Nairobi CBD",dp:"Limuru Town Stage",st:["Kikuyu","Uthiru"],fa:200,dur:"45m"},
+  {f:"Nairobi",t:"Rongai",pk:"Super Metro Terminal, Railways, Nairobi CBD",dp:"Rongai Town Stage",st:["Ngong","Kiserian"],fa:250,dur:"1h 00m"},
+ ]},
+ {n:"Forward Travellers",sn:"Forward",hq:"Kisii",t:"matatu",rt:3.8,fl:"33-seater matatus",routes:[
+  {f:"Kisii",t:"Nairobi",pk:"Milo Stage, Kisii Town",dp:"Forward Stage, Nyamakima, Nairobi",st:["Kericho","Nakuru","Naivasha"],fa:1200,dur:"6h 00m"},
+  {f:"Kisii",t:"Nakuru",pk:"Milo Stage, Kisii Town",dp:"Forward Desk, Nakuru Main Bus Park",st:["Kericho","Sotik"],fa:700,dur:"3h 30m"},
+ ]},
+ {n:"Ngema Sacco",sn:"Ngema",hq:"Murang'a",t:"matatu",rt:3.7,fl:"14-seater matatus",routes:[
+  {f:"Murang'a",t:"Nairobi",pk:"Ngema Stage, Kenol, Murang'a",dp:"Ngema Stage, Nyamakima, Nairobi",st:["Thika"],fa:400,dur:"2h 00m"},
+  {f:"Thika",t:"Nairobi",pk:"Ngema Stage, Thika Town",dp:"Ngema Stage, Nyamakima, Nairobi",st:["Ruiru"],fa:250,dur:"1h 00m"},
+ ]},
+ {n:"Narok Line",sn:"NarokLn",hq:"Narok",t:"matatu",rt:3.9,fl:"33-seater matatus",routes:[
+  {f:"Narok",t:"Nairobi",pk:"Narok Main Stage, Narok Town",dp:"Narok Line Desk, Nairobi CBD (Nyamakima)",st:["Bomet","Sotik","Kericho","Nakuru"],fa:1000,dur:"4h 00m"},
+  {f:"Narok",t:"Nakuru",pk:"Narok Main Stage, Narok Town",dp:"Narok Line Desk, Nakuru Main Bus Park",st:["Bomet","Sotik","Kericho"],fa:600,dur:"2h 30m"},
+ ]},
+ {n:"Modern Coast Bus",sn:"ModCoast",hq:"Mombasa",t:"luxury",rt:4.4,fl:"51-seater luxury coaches",routes:[
+  {f:"Nairobi",t:"Mombasa",pk:"Modern Coast Town Office, Accra Road (opposite Coast Bus); also Caltex Mombasa Rd next to Parkside Towers",dp:"Modern Coast Head Office, Lumumba Road / Jomo Kenyatta Ave, Total Petrol Station next to Aswan Restaurant, Mombasa",st:["Athi River","Voi","Mtito Andei","Mariakani"],fa:2500,dur:"8h 00m"},
+  {f:"Nairobi",t:"Kisumu",pk:"Modern Coast Town Office, Accra Road, Nairobi",dp:"Modern Coast Desk, Kisumu Bus Park",st:["Naivasha","Nakuru","Kericho"],fa:1800,dur:"6h 30m"},
+  {f:"Nairobi",t:"Malindi",pk:"Modern Coast Town Office, Accra Road, Nairobi",dp:"Modern Coast Office, Malindi Town",st:["Athi River","Voi","Mombasa","Kilifi"],fa:3000,dur:"10h 00m"},
+  {f:"Mombasa",t:"Kisumu",pk:"Modern Coast Head Office, Lumumba Road, Mombasa",dp:"Modern Coast Desk, Kisumu Bus Park",st:["Mariakani","Voi","Nakuru"],fa:2200,dur:"8h 00m"},
+ ]},
+ {n:"Dreamliner Express",sn:"Dreamliner",hq:"Nairobi",t:"luxury",rt:4.3,fl:"51-seater luxury coaches",routes:[
+  {f:"Nairobi",t:"Mombasa",pk:"Dreamliner Park, Railways Station, Nairobi",dp:"Dreamliner Office, Mombasa (Mwembe Tayari)",st:["Athi River","Voi","Mtito Andei","Mariakani"],fa:2200,dur:"8h 00m"},
+  {f:"Nairobi",t:"Kisumu",pk:"Dreamliner Park, Railways Station, Nairobi",dp:"Dreamliner Desk, Kisumu Bus Park",st:["Naivasha","Nakuru","Kericho"],fa:1600,dur:"6h 30m"},
+  {f:"Mombasa",t:"Kisumu",pk:"Dreamliner Office, Mombasa (Mwembe Tayari)",dp:"Dreamliner Desk, Kisumu Bus Park",st:["Voi","Nakuru"],fa:2000,dur:"8h 00m"},
+ ]},
+ {n:"Tahmeed Coach",sn:"Tahmeed",hq:"Mombasa",t:"luxury",rt:4.1,fl:"51-seater coaches",routes:[
+  {f:"Nairobi",t:"Mombasa",pk:"Tahmeed Booking Office, Nairobi CBD (Accra Road)",dp:"Tahmeed Office, Uhuru Road, Mombasa",st:["Athi River","Voi","Mtito Andei","Mariakani"],fa:2000,dur:"8h 00m"},
+  {f:"Mombasa",t:"Malindi",pk:"Tahmeed Office, Uhuru Road, Mombasa",dp:"Tahmeed Desk, Malindi Town",st:["Kilifi"],fa:500,dur:"2h 00m"},
+  {f:"Nairobi",t:"Malindi",pk:"Tahmeed Booking Office, Nairobi CBD (Accra Road)",dp:"Tahmeed Desk, Malindi Town",st:["Voi","Mombasa","Kilifi"],fa:2500,dur:"10h 00m"},
+ ]},
+ {n:"Mash Poa (Mash East)",sn:"MashPoa",hq:"Nairobi",t:"vip",rt:4.5,fl:"51-seater VIP coaches",routes:[
+  {f:"Nairobi",t:"Kisumu",pk:"Mash House, Accra Road off River Road; also Railways, Haile Selassie Avenue",dp:"Mash Office, Kisumu Bus Park",st:["Naivasha","Nakuru","Kericho","Ahero"],fa:2000,dur:"6h 00m"},
+  {f:"Nairobi",t:"Mombasa",pk:"Mash House, Accra Road off River Road, Nairobi",dp:"Mash Plaza, Mwembe Tayari / Jomo Kenyatta Avenue (Head Office), Mombasa",st:["Athi River","Voi","Mtito Andei","Mariakani"],fa:2800,dur:"8h 00m"},
+  {f:"Nairobi",t:"Eldoret",pk:"Mash House, Accra Road off River Road, Nairobi",dp:"Mash Desk, Eldoret Bus Park",st:["Naivasha","Nakuru","Eldama Ravine"],fa:1800,dur:"5h 30m"},
+  {f:"Nairobi",t:"Kampala (UG)",pk:"Mash House, Accra Road off River Road, Nairobi",dp:"Mash Poa Kampala Office, Nakawa, Kampala",st:["Nakuru","Eldoret","Malaba","Tororo"],fa:4500,dur:"12h 00m"},
+ ]},
+ {n:"Easy Coach",sn:"EasyCoach",hq:"Nairobi",t:"executive",rt:4.6,fl:"49-seater executive coaches",routes:[
+  {f:"Nairobi",t:"Kisumu",pk:"Easy Coach Main Terminal, Railways Godown, Haile Selassie Avenue",dp:"Easy Coach Desk, Kisumu Bus Park",st:["Naivasha","Nakuru","Kericho","Ahero"],fa:1500,dur:"6h 00m"},
+  {f:"Nairobi",t:"Eldoret",pk:"Easy Coach Main Terminal, Railways Godown, Haile Selassie Avenue",dp:"Easy Coach Desk, Eldoret Bus Park",st:["Naivasha","Nakuru","Eldama Ravine"],fa:1400,dur:"5h 30m"},
+  {f:"Nairobi",t:"Kakamega",pk:"Easy Coach Main Terminal, Railways Godown, Haile Selassie Avenue",dp:"Easy Coach Desk, Kakamega Bus Park",st:["Nakuru","Kisumu"],fa:1700,dur:"7h 00m"},
+  {f:"Nairobi",t:"Bungoma",pk:"Easy Coach Main Terminal, Railways Godown, Haile Selassie Avenue",dp:"Easy Coach Desk, Bungoma Bus Park",st:["Nakuru","Kisumu","Kakamega"],fa:1900,dur:"8h 00m"},
+  {f:"Nairobi",t:"Mombasa",pk:"Easy Coach Main Terminal, Railways Godown, Haile Selassie Avenue",dp:"Easy Coach Office, Mombasa (Mwembe Tayari)",st:["Athi River","Voi","Mtito Andei","Mariakani"],fa:2200,dur:"8h 00m"},
+ ]},
+ {n:"Guardian Coach",sn:"Guardian",hq:"Nairobi",t:"executive",rt:4.2,fl:"49-seater coaches",routes:[
+  {f:"Nairobi",t:"Kisumu",pk:"Guardian Coach Stage, Machakos Country Bus Station, Nairobi",dp:"Guardian Desk, Kisumu Bus Park",st:["Naivasha","Nakuru","Kericho"],fa:1400,dur:"6h 00m"},
+  {f:"Nairobi",t:"Kakamega",pk:"Guardian Coach Stage, Machakos Country Bus Station, Nairobi",dp:"Guardian Desk, Kakamega Bus Park",st:["Nakuru","Kisumu"],fa:1600,dur:"7h 00m"},
+  {f:"Nairobi",t:"Migori",pk:"Guardian Coach Stage, Machakos Country Bus Station, Nairobi",dp:"Guardian Desk, Migori Town",st:["Nakuru","Kisii"],fa:1800,dur:"8h 00m"},
+ ]},
+ {n:"Spanish Coach",sn:"Spanish",hq:"Nairobi",t:"executive",rt:3.9,fl:"49-seater coaches",routes:[
+  {f:"Nairobi",t:"Kisumu",pk:"Spanish Coach Stage, Machakos Country Bus Station, Nairobi",dp:"Spanish Desk, Kisumu Bus Park",st:["Nakuru","Kericho"],fa:1300,dur:"6h 00m"},
+  {f:"Nairobi",t:"Homa Bay",pk:"Spanish Coach Stage, Machakos Country Bus Station, Nairobi",dp:"Spanish Desk, Homa Bay Town",st:["Nakuru","Kisii"],fa:1600,dur:"7h 30m"},
+ ]},
+ {n:"Transline Classic",sn:"Transline",hq:"Kisii",t:"executive",rt:4.0,fl:"49-seater coaches",routes:[
+  {f:"Kisii",t:"Nairobi",pk:"Transline Stage, Kisii Town",dp:"Transline Stage, Nyamakima / Machakos Country Bus, Nairobi",st:["Kericho","Nakuru","Naivasha"],fa:1200,dur:"6h 00m"},
+  {f:"Kisii",t:"Nakuru",pk:"Transline Stage, Kisii Town",dp:"Transline Desk, Nakuru Main Bus Park",st:["Kericho","Sotik"],fa:700,dur:"3h 30m"},
+ ]},
+ {n:"Chania Classic",sn:"Chania",hq:"Thika",t:"matatu",rt:4.1,fl:"33-seater matatus",routes:[
+  {f:"Thika",t:"Nairobi",pk:"Chania Stage, Thika Town (Thika Bus Park)",dp:"Chania Stage, Nyamakima, Nairobi",st:["Ruiru","Juja"],fa:250,dur:"1h 00m"},
+  {f:"Thika",t:"Nyeri",pk:"Chania Stage, Thika Town (Thika Bus Park)",dp:"Chania Desk, Nyeri Town Stage",st:["Karatina"],fa:300,dur:"1h 30m"},
+ ]},
+ {n:"South Rift Sacco",sn:"SthRift",hq:"Kericho",t:"matatu",rt:3.8,fl:"33-seater matatus",routes:[
+  {f:"Kericho",t:"Nairobi",pk:"South Rift Stage, Kericho Main Stage",dp:"South Rift Desk, Nairobi CBD (Nyamakima)",st:["Nakuru","Naivasha"],fa:1100,dur:"4h 00m"},
+  {f:"Kericho",t:"Nakuru",pk:"South Rift Stage, Kericho Main Stage",dp:"South Rift Desk, Nakuru Main Bus Park",st:["Molo","Mau Narok"],fa:500,dur:"2h 00m"},
+ ]},
+ {n:"Elgeyo Sacco",sn:"Elgeyo",hq:"Eldoret",t:"matatu",rt:3.7,fl:"33-seater matatus",routes:[
+  {f:"Eldoret",t:"Nairobi",pk:"Elgeyo Stage, Eldoret Main Stage",dp:"Elgeyo Desk, Nairobi CBD (Nyamakima)",st:["Eldama Ravine","Nakuru","Naivasha"],fa:1400,dur:"5h 30m"},
+  {f:"Eldoret",t:"Nakuru",pk:"Elgeyo Stage, Eldoret Main Stage",dp:"Elgeyo Desk, Nakuru Main Bus Park",st:["Eldama Ravine"],fa:600,dur:"2h 30m"},
+  {f:"Eldoret",t:"Kitale",pk:"Elgeyo Stage, Eldoret Main Stage",dp:"Elgeyo Desk, Kitale Bus Park",st:["Iten","Kapsabet"],fa:400,dur:"2h 00m"},
+ ]},
+ {n:"Buscar Company",sn:"Buscar",hq:"Nairobi",t:"executive",rt:3.9,fl:"49-seater coaches",routes:[
+  {f:"Nairobi",t:"Kakamega",pk:"Buscar Booking Office, Railways, Nairobi",dp:"Buscar Desk, Kakamega Bus Park",st:["Nakuru","Kisumu"],fa:1600,dur:"7h 00m"},
+  {f:"Nairobi",t:"Kisumu",pk:"Buscar Booking Office, Railways, Nairobi",dp:"Buscar Desk, Kisumu Bus Park",st:["Nakuru","Kericho"],fa:1300,dur:"6h 00m"},
+ ]},
+ {n:"Mbukinya Bus",sn:"Mbukinya",hq:"Kisii",t:"executive",rt:3.8,fl:"49-seater coaches",routes:[
+  {f:"Kisii",t:"Mombasa",pk:"Mbukinya Stage, Kisii Town",dp:"Mbukinya Desk, Mombasa (Mwembe Tayari)",st:["Nakuru","Nairobi","Voi"],fa:2500,dur:"10h 00m"},
+  {f:"Kisii",t:"Nairobi",pk:"Mbukinya Stage, Kisii Town",dp:"Mbukinya Office, Machakos Country Bus Station, Nairobi",st:["Kericho","Nakuru"],fa:1200,dur:"6h 00m"},
+ ]},
+ {n:"Kenya Bus Service",sn:"KBS",hq:"Nairobi",t:"executive",rt:4.0,fl:"49-seater coaches",routes:[
+  {f:"Nairobi",t:"Mombasa",pk:"KBS Railways Terminus, Nairobi CBD",dp:"KBS Office, Mombasa (Mwembe Tayari)",st:["Athi River","Voi","Mtito Andei","Mariakani"],fa:2000,dur:"8h 00m"},
+  {f:"Nairobi",t:"Thika",pk:"KBS Railways Terminus, Nairobi CBD",dp:"KBS Desk, Thika Bus Park",st:["Ruiru"],fa:300,dur:"1h 00m"},
+ ]},
+ {n:"Simba Coach",sn:"Simba",hq:"Nairobi",t:"executive",rt:4.1,fl:"49-seater coaches",routes:[
+  {f:"Nairobi",t:"Kisumu",pk:"Simba Depot, Ngara, Nairobi",dp:"Simba Desk, Kisumu Bus Park",st:["Nakuru","Kericho"],fa:1400,dur:"6h 00m"},
+  {f:"Nairobi",t:"Eldoret",pk:"Simba Depot, Ngara, Nairobi",dp:"Simba Desk, Eldoret Bus Park",st:["Nakuru","Eldama Ravine"],fa:1300,dur:"5h 30m"},
+ ]},
+ {n:"Coast Bus",sn:"CoastBus",hq:"Mombasa",t:"executive",rt:4.0,fl:"49-seater coaches",routes:[
+  {f:"Nairobi",t:"Mombasa",pk:"Coast Bus Office, Accra Road, Nairobi",dp:"Coast Bus, Mwembe Tayari, Mombasa",st:["Athi River","Voi","Mtito Andei","Mariakani"],fa:1800,dur:"8h 00m"},
+  {f:"Mombasa",t:"Malindi",pk:"Coast Bus, Mwembe Tayari, Mombasa",dp:"Coast Bus Desk, Malindi Town",st:["Kilifi"],fa:400,dur:"2h 00m"},
+  {f:"Mombasa",t:"Kilifi",pk:"Coast Bus, Mwembe Tayari, Mombasa",dp:"Coast Bus Desk, Kilifi Town",st:["Mtwapa"],fa:300,dur:"1h 30m"},
+ ]},
+ {n:"Kakamega Environmental Sacco",sn:"KakEnv",hq:"Kakamega",t:"matatu",rt:3.6,fl:"33-seater matatus",routes:[
+  {f:"Kakamega",t:"Nairobi",pk:"Kakamega Environmental Stage, Kakamega Main Stage",dp:"Desk at Nairobi CBD stages (Nyamakima)",st:["Kisumu","Nakuru"],fa:1500,dur:"7h 00m"},
+  {f:"Kakamega",t:"Kisumu",pk:"Kakamega Environmental Stage, Kakamega Main Stage",dp:"Kak Env Desk, Kisumu Bus Park",st:["Vihiga","Mumias"],fa:400,dur:"2h 00m"},
+ ]},
+ {n:"Kampala Coach (EA)",sn:"KCoach",hq:"Kampala",t:"vip",rt:4.2,fl:"51-seater VIP cross-border",routes:[
+  {f:"Nairobi",t:"Kampala (UG)",pk:"Kampala Coach Desk, Machakos Country Bus Station, Nairobi",dp:"Kampala Coach Yard, Nakawa, Kampala",st:["Nakuru","Eldoret","Malaba","Tororo"],fa:4000,dur:"12h 00m"},
+  {f:"Kampala (UG)",t:"Kigali (RW)",pk:"Kampala Coach Yard, Nakawa, Kampala",dp:"Kampala Coach Desk, Nyabugogo, Kigali",st:["Mbarara (UG)","Kabale"],fa:3000,dur:"8h 00m"},
+ ]},
+ {n:"Tawakal Bus (EA)",sn:"Tawakal",hq:"Nairobi",t:"executive",rt:3.8,fl:"49-seater coaches",routes:[
+  {f:"Nairobi",t:"Mombasa",pk:"Tawakal Booking Point, Eastleigh, Nairobi",dp:"Tawakal Desk, Mombasa (Mwembe Tayari)",st:["Athi River","Voi","Mariakani"],fa:1800,dur:"8h 00m"},
+  {f:"Nairobi",t:"Garissa",pk:"Tawakal Booking Point, Eastleigh, Nairobi",dp:"Tawakal Desk, Garissa Bus Park",st:["Thika","Mwingi"],fa:1200,dur:"5h 00m"},
+ ]},
+ {n:"Dar Express (EA)",sn:"DarExp",hq:"Dar es Salaam",t:"vip",rt:4.1,fl:"51-seater VIP cross-border",routes:[
+  {f:"Nairobi",t:"Dar es Salaam (TZ)",pk:"Dar Express Office, Nairobi CBD (River Road)",dp:"Dar Express Terminal, Ubungo, Dar es Salaam",st:["Arusha (TZ)","Dodoma (TZ)"],fa:5500,dur:"14h 00m"},
+  {f:"Arusha (TZ)",t:"Dar es Salaam (TZ)",pk:"Dar Express Desk, Arusha Central",dp:"Dar Express Terminal, Ubungo, Dar es Salaam",st:["Dodoma (TZ)"],fa:3500,dur:"10h 00m"},
+ ]},
+ {n:"Onatracar (EA)",sn:"Onatracar",hq:"Kigali",t:"vip",rt:4.0,fl:"51-seater VIP cross-border",routes:[
+  {f:"Kigali (RW)",t:"Kampala (UG)",pk:"Onatracar Terminal, Nyabugogo, Kigali",dp:"Onatracar Desk, Kampala (Nakawa)",st:["Mbarara (UG)"],fa:2500,dur:"6h 00m"},
+  {f:"Kigali (RW)",t:"Nairobi",pk:"Onatracar Terminal, Nyabugogo, Kigali",dp:"Onatracar Desk, Nairobi CBD",st:["Kampala (UG)","Malaba","Eldoret","Nakuru"],fa:6000,dur:"18h 00m"},
+ ]},
+ {n:"Great Rift Shuttle",sn:"GtRift",hq:"Naivasha",t:"shuttle",rt:4.3,fl:"7–14 seat shuttles",routes:[
+  {f:"Nairobi",t:"Naivasha",pk:"Great Rift Desk, Nairobi CBD (Railways)",dp:"Great Rift Stage, Naivasha Town",st:["Limuru","Kijabe"],fa:500,dur:"1h 30m"},
+  {f:"Naivasha",t:"Nakuru",pk:"Great Rift Stage, Naivasha Town",dp:"Great Rift Desk, Nakuru Main Bus Park",st:["Gilgil"],fa:400,dur:"1h 15m"},
+ ]},
+ {n:"Nomadic Shuttle EA",sn:"Nomadic",hq:"Arusha",t:"shuttle",rt:4.4,fl:"7–14 seat shuttles",routes:[
+  {f:"Nairobi",t:"Arusha (TZ)",pk:"Nomadic Shuttle Point, Nairobi CBD (River Road)",dp:"Nomadic Shuttle Point, Arusha Central",st:["Namanga"],fa:3500,dur:"6h 00m"},
+  {f:"Arusha (TZ)",t:"Moshi (TZ)",pk:"Nomadic Shuttle Point, Arusha Central",dp:"Nomadic Desk, Moshi Town",st:["Himo"],fa:1500,dur:"1h 30m"},
+ ]},
+ {n:"Nakuru Rift Line",sn:"NkRift",hq:"Nakuru",t:"matatu",rt:3.8,fl:"33-seater matatus",routes:[
+  {f:"Nakuru",t:"Nairobi",pk:"Rift Line Stage, Nakuru Town (Main Bus Park)",dp:"Rift Line Desk, Nairobi CBD (Nyamakima)",st:["Naivasha","Limuru"],fa:800,dur:"2h 30m"},
+  {f:"Nakuru",t:"Eldoret",pk:"Rift Line Stage, Nakuru Town (Main Bus Park)",dp:"Rift Line Desk, Eldoret Main Stage",st:["Eldama Ravine"],fa:600,dur:"2h 30m"},
+ ]},
+ {n:"Socec Sacco",sn:"Socec",hq:"Bungoma",t:"matatu",rt:3.6,fl:"33-seater matatus",routes:[
+  {f:"Bungoma",t:"Nairobi",pk:"Socec Stage, Bungoma Town (Bus Park)",dp:"Socec Stage, Nyamakima, Nairobi",st:["Kakamega","Kisumu","Nakuru"],fa:1600,dur:"8h 00m"},
+  {f:"Bungoma",t:"Kisumu",pk:"Socec Stage, Bungoma Town (Bus Park)",dp:"Socec Desk, Kisumu Bus Park",st:["Kakamega"],fa:600,dur:"3h 00m"},
+ ]},
+ {n:"Kilifi Sacco",sn:"Kilifi",hq:"Kilifi",t:"matatu",rt:3.7,fl:"33-seater matatus",routes:[
+  {f:"Kilifi",t:"Mombasa",pk:"Kilifi Town Stage, Kilifi",dp:"Kilifi Desk, Mombasa (Mwembe Tayari)",st:["Mtwapa"],fa:300,dur:"1h 30m"},
+  {f:"Kilifi",t:"Malindi",pk:"Kilifi Town Stage, Kilifi",dp:"Kilifi Desk, Malindi Town",st:["Watamu"],fa:250,dur:"45m"},
+ ]},
+ {n:"Emmanuel Travellers",sn:"Emmanuel",hq:"Kisii",t:"matatu",rt:3.7,fl:"33-seater matatus",routes:[
+  {f:"Kisii",t:"Nairobi",pk:"Kisii Main Stage, Kisii Town",dp:"Emmanuel Desk, Nairobi CBD (Nyamakima)",st:["Kericho","Nakuru"],fa:1200,dur:"6h 00m"},
+  {f:"Kisii",t:"Nakuru",pk:"Kisii Main Stage, Kisii Town",dp:"Emmanuel Desk, Nakuru Main Bus Park",st:["Kericho","Sotik"],fa:700,dur:"3h 30m"},
+ ]},
+ {n:"Meridian Link",sn:"Meridian",hq:"Nairobi",t:"matatu",rt:3.6,fl:"33-seater matatus",routes:[
+  {f:"Nairobi",t:"Kiambu",pk:"Meridian Point, Nyamakima, Nairobi",dp:"Kiambu Town Stage",st:["Riuwaka"],fa:150,dur:"30m"},
+  {f:"Nairobi",t:"Thika",pk:"Meridian Point, Nyamakima, Nairobi",dp:"Thika Town Stage",st:["Kiambu","Ruiru"],fa:300,dur:"1h 15m"},
+ ]},
+ {n:"Mash East",sn:"MashEast",hq:"Nairobi",t:"executive",rt:4.3,fl:"49-seater executive coaches",routes:[
+  {f:"Nairobi",t:"Meru",pk:"Mash East Desk, Accra Road, Nairobi",dp:"Mash East Desk, Meru Bus Park",st:["Embu","Chuka"],fa:1200,dur:"5h 00m"},
+  {f:"Nairobi",t:"Embu",pk:"Mash East Desk, Accra Road, Nairobi",dp:"Mash East Desk, Embu Town Stage",st:["Machakos","Wote"],fa:800,dur:"3h 30m"},
+ ]},
+];
 
-                const data = await response.json();
+/* ===== GENERATE DEPARTURES ===== */
+function genDep(type){
+  const t=[];
+  if(type==="matatu"||type==="shuttle"){
+    for(let h=5;h<=20;h++)for(let m=0;m<60;m+=30){if(h===5&&m===0)continue;const hr=h>12?h-12:h;t.push(`${String(hr).padStart(2,'0')}:${String(m).padStart(2,'0')} ${h>=12?'PM':'AM'}`)}
+  }else if(type==="executive"){
+    for(let h=6;h<=21;h++){const hr=h>12?h-12:h;t.push(`${String(hr).padStart(2,'0')}:00 ${h>=12?'PM':'AM'}`)}
+  }else{
+    ["06:00 AM","07:30 AM","09:00 AM","10:30 AM","12:00 PM","01:30 PM","03:00 PM","04:30 PM","06:00 PM","08:00 PM","10:00 PM"].forEach(x=>t.push(x));
+  }
+  return t;
+}
 
-                if (data.success) {
-                    // ── Success ──
-                    const email = document.getElementById('email').value.trim();
-                    document.getElementById('modal-email').textContent = email;
+/* ===== VEHICLE CATEGORIES ===== */
+const CATS=[
+ {k:"matatu",n:"SACCO Matatu",d:"14–33 seater PSV matatus run by licensed SACCOs. Fast, frequent, hop-on service.",p:"From KSh 250"},
+ {k:"shuttle",n:"Shuttle / Tour Van",d:"7–14 seat shuttles with AC, ideal for safari towns and cross-border routes.",p:"From KSh 500"},
+ {k:"executive",n:"Executive Coach",d:"49-seater long-distance coach with USB charging, reclining seats and attendant.",p:"From KSh 800"},
+ {k:"luxury",n:"Luxury Coach (2+2)",d:"Premium 2+2 recliner with Wi-Fi, snacks and extra legroom.",p:"From KSh 1,200"},
+ {k:"vip",n:"VIP Sleeper / Double-Decker",d:"Fully reclinable sleeper seats or upper-deck panoramic seating for EA cross-border.",p:"From KSh 4,000"},
+];
 
-                    const modal = document.getElementById('success-modal');
-                    const content = document.getElementById('modal-content');
-                    modal.classList.remove('hidden');
-                    modal.classList.add('flex');
-                    requestAnimationFrame(() => {
-                        content.classList.remove('scale-95', 'opacity-0');
-                        content.classList.add('scale-100', 'opacity-100');
-                    });
+/* ===== UI SETUP ===== */
+const $=id=>document.getElementById(id);
+const fromSel=$("fromCity"),toSel=$("toCity");
+TOWNS.forEach(t=>{fromSel.add(new Option(t,t));toSel.add(new Option(t,t))});
+fromSel.value="Nairobi";toSel.value="Nakuru";
+const today=new Date();$("date").value=today.toISOString().slice(0,10);
+ $("date").min=today.toISOString().slice(0,10);
 
-                    showToast('Your complaint has been submitted successfully.', 'success');
+function swapCities(){const a=fromSel.value;fromSel.value=toSel.value;toSel.value=a}
+function quickR(a,b){fromSel.value=a;toSel.value=b;search()}
+function mm(){$("mobmenu").classList.remove("open")}
+function copyTxt(t){navigator.clipboard?navigator.clipboard.writeText(t):void 0;toast('Copied: '+t)}
 
-                    // Reset form for next submission
-                    form.reset();
-                    charCount.textContent = '0';
+/* MARQUEE */
+ $("mtrack").innerHTML=(()=>{const items=SD.map(s=>`<span class="mitem"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="12" rx="2"/><circle cx="7" cy="19" r="1.6"/><circle cx="17" cy="19" r="1.6"/></svg>${s.n}</span>`).join("");return items+items})();
 
-                    // Generate a fresh reference number
-                    currentRef = generateRef();
-                    document.getElementById('ref-number').textContent = currentRef;
-                    document.getElementById('modal-ref').textContent = currentRef;
+/* CATEGORY CARDS */
+ $("catWrap").innerHTML=CATS.map(c=>`<div class="cat reveal" onclick="pickCat('${c.k}',this)">
+ <div class="cico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="12" rx="2"/><circle cx="7" cy="19" r="1.6"/><circle cx="17" cy="19" r="1.6"/><path d="M2 11h20"/></svg></div>
+ <h3>${c.n}</h3><p>${c.d}</p><div class="price">${c.p}<small> / typical seat</small></div></div>`).join("");
 
-                } else {
-                    // Web3Forms returned an error
-                    showToast(data.message || 'Submission failed. Please try again.', 'error');
-                }
+let curCat=null;
+function pickCat(k,el){curCat=curCat===k?null:k;document.querySelectorAll(".cat").forEach(c=>c.classList.remove("on"));if(curCat)el.classList.add("on")}
 
-            } catch (err) {
-                // Network error
-                showToast('Network error. Please check your connection and try again.', 'error');
-                console.error('Web3Forms error:', err);
-            }
+/* ===== ROUTE-AWARE SEARCH ===== */
+function findRoutes(from,to,catFilter){
+  const results=[];
+  SD.forEach(sacco=>{
+    if(catFilter&&catFilter!=="any"&&sacco.t!==catFilter)return;
+    sacco.routes.forEach(route=>{
+      /* Direct match */
+      if(route.f===from&&route.t===to){
+        results.push({sacco,route,dir:"direct"});
+      }
+      /* Reverse match — swap pickup/dropoff */
+      if(route.f===to&&route.t===from){
+        results.push({sacco,route:{
+          f:route.t,t:route.f,
+          pk:route.dp,dp:route.pk,
+          st:[...route.st].reverse(),
+          fa:route.fa,dur:route.dur
+        },dir:"reverse"});
+      }
+      /* Stage match: from matches, to is a stage */
+      if(route.f===from&&route.st.includes(to)){
+        const idx=route.st.indexOf(to);
+        const subst=route.st.slice(0,idx);
+        const subfa=Math.round(route.fa*(idx+1)/(route.st.length+1)/50)*50;
+        results.push({sacco,route:{
+          f:route.f,t:to,
+          pk:route.pk,dp:`${to} Town Stage (alight at ${to})`,
+          st:subst,fa:Math.max(200,subfa),dur:estDur(subst.length)
+        },dir:"stage"});
+      }
+      /* Stage match reverse: to matches origin, from is a stage */
+      if(route.t===to&&route.st.includes(from)){
+        const idx=route.st.indexOf(from);
+        const subst=route.st.slice(idx+1);
+        const subfa=Math.round(route.fa*(route.st.length-idx)/(route.st.length+1)/50)*50;
+        results.push({sacco,route:{
+          f:from,t:route.t,
+          pk:`${from} Town Stage (board at ${from})`,dp:route.dp,
+          st:subst,fa:Math.max(200,subfa),dur:estDur(subst.length+1)
+        },dir:"stage"});
+      }
+    });
+  });
+  return results;
+}
+function estDur(stops){return`${Math.max(1,stops)}h ${Math.floor(Math.random()*50+10)}m`}
 
-            // Restore button
-            submitText.textContent = 'SUBMIT COMPLAINT';
-            submitIcon.classList.remove('spinner');
-            validateForm();
-        });
+/* ===== SEARCH ===== */
+let lastResults=[];
+function search(){
+  const a=fromSel.value,b=toSel.value,d=$("date").value||todayStr(),pax=+$("paxSel").value,cat=$("catSel").value;
+  if(a===b){toast("Origin and destination cannot be the same");return}
+  const results=findRoutes(a,b,cat);
+  /* Sort by fare */
+  results.sort((x,y)=>x.route.fa-y.route.fa);
+  lastResults=results;
+  const dateObj=new Date(d+"T00:00:00");
+  const dateStr=dateObj.toLocaleDateString('en-KE',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
+  let html=`<div class="sechead" style="margin:30px 0 18px">
+    <div class="sectionline" style="justify-content:center"><span class="livedot"></span> Results</div>
+    <h2>${a} &rarr; ${b}</h2><p>${dateStr} · ${pax} passenger${pax>1?'s':''} · ${results.length} trip${results.length!==1?'s':''} found</p></div>`;
+  if(!results.length){
+    html+=`<div class="emptyres"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--mut)" stroke-width="1.5"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/><path d="M8 11h6"/></svg><h3>No direct routes found</h3><p>Try a different vehicle category, or search via a major hub like Nairobi or Nakuru.</p><button class="btn btn-o" style="margin-top:12px" onclick="quickR('${a}','Nairobi')">Search via Nairobi</button></div>`;
+  }else{
+    html+=`<div style="display:grid;gap:14px">${results.map((r,i)=>resultHTML(r,i,pax)).join("")}</div>`;
+  }
+  let old=$("results");if(old)old.remove();
+  const div=document.createElement("div");div.className="wrap";div.id="results";div.innerHTML=html;
+  $("live").before(div);
+  div.scrollIntoView({behavior:"smooth",block:"start"});
+}
+function todayStr(){return today.toISOString().slice(0,10)}
 
-        // ── Reset Button ──
-        document.getElementById('reset-btn').addEventListener('click', () => {
-            charCount.textContent = '0';
-            submitBtn.disabled = true;
-        });
+function resultHTML(r,i,pax){
+  const s=r.sacco,rt=r.route;
+  const tag=s.t==="vip"?["tag-y","VIP"]:s.t==="luxury"?["tag-b","LUXURY"]:s.t==="executive"?["tag-g","EXEC"]:s.t==="shuttle"?["tag-b","SHUTTLE"]:["tag-g","SACCO"];
+  const totalFare=rt.fa*pax;
+  const deps=genDep(s.t);
+  const nextDep=deps[Math.floor(Math.random()*deps.length)];
+  const amenities=AMENITIES[s.t]||[];
+  const stagesHTML=rt.st.length?`<div class="stagesrow"><span class="stagepill first">${rt.f}</span>${rt.st.map(st=>`<span class="stagepill">${st}</span>`).join("")}<span class="stagepill last">${rt.t}</span></div>`:'';
+  const amenHTML=amenities.length?`<div class="amenrow">${amenities.map(a=>`<span class="amen">${AMEN_SVG}${a}</span>`).join("")}</div>`:'';
+  return `<div class="rescard">
+   <div class="saccobadge">${s.sn.slice(0,8)}</div>
+   <div class="resinfo"><h4>${s.n}</h4>
+     <div class="meta">
+       <span><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>${rt.dur}</span>
+       <span><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>${3+Math.floor(Math.random()*20)} seats left</span>
+       <span><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--acc)" stroke-width="2" fill="rgba(255,198,26,.15)"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>${s.rt}/5</span>
+     </div>
+     <div class="pickupbox">
+       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="10" r="3"/><path d="M12 21c4-5 7-8.5 7-11a7 7 0 1 0-14 0c0 2.5 3 6 7 11z"/></svg>
+       <div><strong>Board at:</strong> ${rt.pk}<em>Drop-off: ${rt.dp}</em></div>
+     </div>
+     ${stagesHTML}
+     ${amenHTML}
+     <div style="margin-top:8px"><span class="tag ${tag[0]}">${tag[1]}</span> <span class="tag tag-b">${s.fl}</span></div>
+   </div>
+   <div class="resprice"><div class="amt">KSh ${totalFare.toLocaleString()}</div><small>per seat KSh ${rt.fa.toLocaleString()} × ${pax}</small>
+     <button class="btn btn-p" style="margin-top:10px;padding:10px 18px;font-size:.88rem" onclick="openBooking(${i})">Book Now</button>
+   </div></div>`;
+}
 
-        // ── Close Modal ──
-        function closeModal() {
-            const modal = document.getElementById('success-modal');
-            const content = document.getElementById('modal-content');
-            content.classList.remove('scale-100', 'opacity-100');
-            content.classList.add('scale-95', 'opacity-0');
-            setTimeout(() => {
-                modal.classList.add('hidden');
-                modal.classList.remove('flex');
-            }, 300);
-        }
+/* ===== BOOKING FLOW ===== */
+let bk=null;
+function openBooking(i){
+  const r=lastResults[i],pax=+$("paxSel").value;
+  bk={res:r,pax,seats:[],deposit:false,payAmt:0,paxData:[]};
+  $("modal").classList.add("open");
+  setStep(1);renderSeats();
+  $("shTitle").textContent="Step 1 — Select Seats · "+r.sacco.n;
+  $("stepPax").classList.add("hidden");$("stepPay").classList.add("hidden");$("stepDone").classList.add("hidden");
+  $("stepSeat").classList.remove("hidden");
+}
+function closeModal(){$("modal").classList.remove("open")}
+function setStep(n){[1,2,3,4].forEach(i=>{const s=$("s"+i);s.className="step"+(i<n?" done":i===n?" on":"")})}
 
-        // ── FAQ Toggle ──
-        function toggleFaq(btn) {
-            const item = btn.closest('.faq-item');
-            const content = item.querySelector('.faq-content');
-            const icon = btn.querySelector('[data-lucide="chevron-down"]');
-            const isOpen = !content.classList.contains('hidden');
+function renderSeats(){
+  const r=bk.res,rt=r.route;
+  const cap=r.sacco.t==="matatu"||r.sacco.t==="shuttle"?14:r.sacco.t==="luxury"?47:49;
+  const cols=r.sacco.t==="matatu"||r.sacco.t==="shuttle"?4:5;
+  const rows=Math.ceil(cap/(cols-1))+1;
+  let seats="",n=1;
+  for(let row=0;row<rows&&n<=cap;row++){
+    for(let c=0;c<cols;c++){
+      if(c===Math.floor(cols/2)){seats+='<div style="width:8px"></div>';continue}
+      if(n>cap)break;
+      const taken=Math.random()<0.3&&!(row<1);
+      seats+=`<button class="seat ${taken?"taken":""}" id="st${n}" ${taken?"disabled":""} onclick="toggleSeat(${n})">${n}</button>`;
+      n++;
+    }
+  }
+  $("stepSeat").innerHTML=`
+   <div class="pickupbox" style="margin-bottom:8px">
+     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="10" r="3"/><path d="M12 21c4-5 7-8.5 7-11a7 7 0 1 0-14 0c0 2.5 3 6 7 11z"/></svg>
+     <div><strong>Board at:</strong> ${rt.pk}<em>Drop-off: ${rt.dp} · Departure ~${bk.res.route.dur}</em></div>
+   </div>
+   <div class="busvisual">
+     <div class="busfront"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l9 18H3z"/></svg> Driver / Front</div>
+     <div class="seatgrid" style="grid-template-columns:repeat(${cols},1fr)">${seats}</div>
+     <div class="legend"><span><i style="background:var(--card);border:1.5px solid var(--line)"></i>Available</span><span><i style="background:linear-gradient(135deg,var(--acc),var(--acc2))"></i>Selected</span><span><i style="background:rgba(255,77,106,.25)"></i>Taken</span></div>
+   </div>
+   <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;gap:12px;flex-wrap:wrap">
+     <div>Selected: <b id="selCount" style="color:var(--acc)">0</b> / ${bk.pax} &nbsp;·&nbsp; Subtotal <b id="selAmt" style="color:var(--acc)">KSh 0</b></div>
+     <button class="btn btn-p" id="contBtn" disabled style="opacity:.5" onclick="goPax()">Continue <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+   </div>`;
+}
+function toggleSeat(n){
+  const el=$("st"+n);if(el.classList.contains("taken"))return;
+  if(el.classList.contains("sel")){el.classList.remove("sel");bk.seats=bk.seats.filter(x=>x!==n)}
+  else{if(bk.seats.length>=bk.pax){toast(`Maximum ${bk.pax} seat${bk.pax>1?'s':''} for this booking`);return}el.classList.add("sel");bk.seats.push(n)}
+  const amt=bk.seats.length*bk.res.route.fa;
+  $("selCount").textContent=bk.seats.length;
+  $("selAmt").textContent="KSh "+amt.toLocaleString();
+  const cb=$("contBtn");cb.disabled=bk.seats.length!==bk.pax;cb.style.opacity=bk.seats.length===bk.pax?1:.5;
+}
 
-            document.querySelectorAll('.faq-content').forEach(c => c.classList.add('hidden'));
-            document.querySelectorAll('.faq-toggle [data-lucide="chevron-down"]').forEach(i => i.style.transform = '');
+/* Step 2: Passenger Details */
+function goPax(){
+  setStep(2);$("shTitle").textContent="Step 2 — Passenger Details";
+  $("stepSeat").classList.add("hidden");$("stepPax").classList.remove("hidden");
+  let html='';
+  for(let i=0;i<bk.pax;i++){
+    html+=`<div style="margin-bottom:16px;padding:14px;background:var(--card);border:1px solid var(--line);border-radius:14px">
+      <div style="font-weight:700;margin-bottom:10px;color:var(--acc)">Passenger ${i+1} — Seat #${bk.seats[i]}</div>
+      <div class="paxfield"><label>Full Name (as on ID)</label><input id="pname${i}" placeholder="e.g. John Kamau" required></div>
+      <div class="paxfield"><label>Phone Number</label><input id="pphone${i}" type="tel" placeholder="e.g. 0712345678" required></div>
+      ${i===0?`<div class="paxfield"><label>Email (for e-ticket)</label><input id="pemail" type="email" placeholder="e.g. john@email.com"></div>`:''}
+    </div>`;
+  }
+  html+=`<div style="display:flex;gap:10px;margin-top:14px">
+    <button class="btn btn-o" onclick="backToSeats()" style="flex:1;justify-content:center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>Back</button>
+    <button class="btn btn-p" style="flex:2;justify-content:center" onclick="goPay()">Continue to Payment <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+  </div>`;
+  $("stepPax").innerHTML=html;
+}
+function backToSeats(){
+  setStep(1);$("shTitle").textContent="Step 1 — Select Seats · "+bk.res.sacco.n;
+  $("stepPax").classList.add("hidden");$("stepSeat").classList.remove("hidden");
+}
 
-            if (!isOpen) {
-                content.classList.remove('hidden');
-                icon.style.transform = 'rotate(180deg)';
-            }
-        }
+/* Step 3: Payment */
+function goPay(){
+  /* Validate passenger data */
+  bk.paxData=[];
+  for(let i=0;i<bk.pax;i++){
+    const name=$("pname"+i).value.trim(),phone=$("pphone"+i).value.trim();
+    if(!name||!phone){toast(`Please fill in details for Passenger ${i+1}`);return}
+    bk.paxData.push({name,phone,seat:bk.seats[i]});
+  }
+  bk.email=$("pemail")?$("pemail").value.trim():"";
 
-        // ── Toast Notifications ──
-        function showToast(message, type = 'info') {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            const colors = { success: 'bg-green-600', error: 'bg-red-600', info: 'bg-navy-900' };
-            const icons = { success: 'check-circle-2', error: 'alert-circle', info: 'info' };
+  setStep(3);$("shTitle").textContent="Step 3 — Payment";
+  $("stepPax").classList.add("hidden");$("stepPay").classList.remove("hidden");
+  bk.total=bk.seats.length*bk.res.route.fa;
+  const rt=bk.res.route;
+  $("stepPay").innerHTML=`
+   <div class="sumrow"><span>Operator / SACCO</span><b>${bk.res.sacco.n}</b></div>
+   <div class="sumrow"><span>Pick-up Point (${rt.f})</span><b style="font-size:.8rem;text-align:right;max-width:260px">${rt.pk}</b></div>
+   <div class="sumrow"><span>Drop-off (${rt.t})</span><b style="font-size:.8rem;text-align:right;max-width:260px">${rt.dp}</b></div>
+   <div class="sumrow"><span>Seats</span><b>${bk.seats.map(s=>"#"+s).join(", ")}</b></div>
+   <div class="sumrow"><span>Route</span><b>${rt.f} &rarr; ${rt.t}</b></div>
+   <div class="sumrow"><span>Travel Date</span><b>${$("date").value}</b></div>
+   <div class="sumrow"><span>Passenger(s)</span><b>${bk.paxData.map(p=>p.name).join(", ")}</b></div>
+   <div class="sumrow"><span>Full fare</span><b>KSh ${bk.total.toLocaleString()}</b></div>
+   <div style="margin:14px 0;display:grid;gap:10px">
+     <label class="cat" style="display:flex;gap:12px;align-items:center;padding:12px;cursor:pointer"><input type="radio" name="pm" checked onchange="pmode(false)"> <div><b>Pay Full Fare</b><div style="color:var(--mut);font-size:.76rem">KSh ${bk.total.toLocaleString()} — instant confirmed ticket</div></div></label>
+     <label class="cat" style="display:flex;gap:12px;align-items:center;padding:12px;cursor:pointer"><input type="radio" name="pm" onchange="pmode(true)"> <div><b>Book with 50% Deposit</b><div style="color:var(--mut);font-size:.76rem">Pay KSh ${Math.ceil(bk.total/2).toLocaleString()} now, balance at the stage before departure</div></div></label>
+   </div>
+   <div class="mpesabox">
+     <div style="display:flex;gap:10px;align-items:center;margin-bottom:4px">
+       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00e08f" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="M2 9h20"/></svg>
+       <b style="color:var(--grn)">LIPA NA M-PESA — PAYBILL</b>
+     </div>
+     <div style="background:var(--bg);border:1px solid var(--line);border-left:3px solid var(--acc);border-radius:10px;padding:10px 12px;margin:10px 0;font-size:.76rem;color:var(--mut)">
+       <b style="color:var(--acc)">Note:</b> The Paybill number is the same for all bookings, but the <b style="color:var(--txt)">account number is specific to the SACCO</b> — in this case <b style="color:var(--txt)">${bk.res.sacco.n}</b>. Always confirm the operator name on your e-ticket before paying.
+     </div>
+     <div class="paybillrow"><span style="color:var(--mut);font-size:.72rem">PAYBILL</span><b>${PAYBILL}</b><button class="copybtn" onclick="copyTxt('${PAYBILL}')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>Copy</button></div>
+     <div class="paybillrow"><span style="color:var(--mut);font-size:.72rem">ACCOUNT</span><b>${ACCOUNT}</b><button class="copybtn" onclick="copyTxt('${ACCOUNT}')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>Copy</button></div>
+   </div>
+   <button class="btn btn-p" style="width:100%;justify-content:center;margin-top:14px" onclick="confirmPay()">
+     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>
+     I Have Sent <span id="payAmt">KSh ${bk.total.toLocaleString()}</span> via M-PESA
+   </button>
+   <p style="color:var(--mut);font-size:.7rem;text-align:center;margin-top:8px">You'll receive an M-PESA confirmation, then your e-ticket with pick-up stage and seat numbers.</p>`;
+}
+function pmode(isDep){
+  bk.deposit=isDep;
+  const amt=isDep?Math.ceil(bk.total/2):bk.total;
+  bk.payAmt=amt;$("payAmt").textContent="KSh "+amt.toLocaleString();
+}
 
-            toast.className = `toast-enter ${colors[type]} text-white px-5 py-3.5 rounded-xl shadow-2xl flex items-center gap-3 min-w-[280px] max-w-sm`;
-            toast.innerHTML = `
-                <i data-lucide="${icons[type]}" class="w-5 h-5 flex-shrink-0"></i>
-                <span class="text-sm font-medium leading-snug">${message}</span>
-            `;
-            container.appendChild(toast);
-            lucide.createIcons();
+/* Step 4: Confirmation */
+function confirmPay(){
+  bk.payAmt=bk.payAmt||bk.total;
+  setStep(4);$("shTitle").textContent="Booking Confirmed!";
+  $("stepPay").classList.add("hidden");$("stepDone").classList.remove("hidden");
+  const ref="SLK"+Date.now().toString().slice(-6);
+  const rt=bk.res.route;
+  const dateStr=new Date($("date").value+"T00:00:00").toLocaleDateString('en-KE',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
 
-            setTimeout(() => {
-                toast.classList.remove('toast-enter');
-                toast.classList.add('toast-exit');
-                setTimeout(() => toast.remove(), 300);
-            }, 4000);
-        }
-    </script>
+  /* Save to localStorage */
+  const trip={
+    ref,date:$("date").value,dateStr,
+    from:rt.f,to:rt.t,
+    sacco:bk.res.sacco.n,
+    seats:bk.seats,pax:bk.paxData,
+    pickup:rt.pk,dropoff:rt.dp,
+    fare:bk.total,paid:bk.payAmt,
+    deposit:bk.deposit,
+    duration:rt.dur,
+    ts:Date.now()
+  };
+  const trips=JSON.parse(localStorage.getItem("slk_trips")||"[]");
+  trips.unshift(trip);if(trips.length>20)trips.length=20;
+  localStorage.setItem("slk_trips",JSON.stringify(trips));
+
+  $("stepDone").innerHTML=`
+   <div style="text-align:center;padding:12px 0">
+     <div style="width:64px;height:64px;border-radius:50%;background:rgba(0,224,143,.12);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;animation:pop .5s">
+       <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#00e08f" stroke-width="2.6" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg></div>
+     <h3 style="font-size:1.2rem">Asante! Ticket Reserved</h3>
+     <p style="color:var(--mut);font-size:.85rem;margin-top:5px">Reference <b style="color:var(--acc)">${ref}</b></p>
+   </div>
+   <div style="background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin:14px 0">
+     <div class="sumrow"><span>SACCO</span><b>${bk.res.sacco.n}</b></div>
+     <div class="sumrow"><span>Route</span><b>${rt.f} &rarr; ${rt.t}</b></div>
+     <div class="sumrow"><span>Date</span><b>${dateStr}</b></div>
+     <div class="sumrow"><span>Duration</span><b>${rt.dur}</b></div>
+     <div class="sumrow"><span>Pick-up</span><b style="font-size:.78rem;text-align:right;max-width:260px">${rt.pk}</b></div>
+     <div class="sumrow"><span>Drop-off</span><b style="font-size:.78rem;text-align:right;max-width:260px">${rt.dp}</b></div>
+     ${rt.st.length?`<div class="sumrow"><span>Via</span><b style="font-size:.78rem">${rt.st.join(" → ")}</b></div>`:''}
+     <div class="sumrow"><span>Passenger(s)</span><b>${bk.paxData.map(p=>`${p.name} (Seat #${p.seat})`).join("<br>")}</b></div>
+     <div class="sumrow total"><span>${bk.deposit?"Deposit Paid":"Total Paid"}</span><b>KSh ${bk.payAmt.toLocaleString()}</b></div>
+     ${bk.deposit?`<div class="sumrow"><span>Balance at stage</span><b style="color:var(--red)">KSh ${(bk.total-bk.payAmt).toLocaleString()}</b></div>`:''}
+   </div>
+   <div style="text-align:center;margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
+     <button class="btn btn-g" onclick="shareTrip('${ref}')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98"/></svg>Share Trip</button>
+     <button class="btn btn-o" onclick="closeModal()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>Done</button>
+   </div>`;
+}
+function shareTrip(ref){
+  const rt=bk.res.route;
+  const text=`SafariLink EA Booking ${ref}: ${rt.f} → ${rt.t} via ${bk.res.sacco.n}. Board at: ${rt.pk}. Seats: ${bk.seats.join(",")}. Fare: KSh ${bk.payAmt}.`;
+  if(navigator.share){navigator.share({title:"SafariLink EA Trip",text}).catch(()=>{})}
+  else{copyTxt(text);toast("Trip details copied to clipboard")}
+}
+
+/* ===== MY TRIPS ===== */
+function showMyTrips(){
+  const sec=$("mytrips");sec.classList.remove("hidden");
+  const trips=JSON.parse(localStorage.getItem("slk_trips")||"[]");
+  if(!trips.length){
+    $("tripsList").innerHTML=`<div class="emptyres"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--mut)" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg><h3>No bookings yet</h3><p>Book your first trip and it will appear here.</p></div>`;
+  }else{
+    $("tripsList").innerHTML=trips.map(t=>`<div class="tripcard">
+      <div class="saccobadge" style="width:44px;height:44px;font-size:.62rem">${t.sacco.slice(0,6)}</div>
+      <div class="tdet" style="flex:1">
+        <b>${t.from} → ${t.to}</b><br>
+        ${t.dateStr} · ${t.sacco} · Seats ${t.seats.join(",")}<br>
+        <span style="font-size:.72rem">Board: ${t.pickup.slice(0,60)}${t.pickup.length>60?"...":""}</span>
+      </div>
+      <div style="text-align:right">
+        <div class="tref">${t.ref}</div>
+        <div class="tstatus tag-g" style="display:inline-block;padding:3px 10px;border-radius:99px;font-size:.66rem;font-weight:700;background:rgba(0,224,143,.12);color:var(--grn)">${t.deposit?"DEPOSIT":"CONFIRMED"}</div>
+        <div style="color:var(--acc);font-weight:800;font-size:.92rem;margin-top:4px">KSh ${t.paid.toLocaleString()}</div>
+      </div>
+    </div>`).join("");
+  }
+  sec.scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+/* ===== LIVE FEED ===== */
+const liveData=[
+  {t:"4NTE Sacco — Nairobi → Nakuru 08:30 AM departed on time",m:"2 min ago"},
+  {t:"Modern Coast — Mombasa → Nairobi 06:00 AM arrived at Railways",m:"15 min ago"},
+  {t:"Easy Coach — Nairobi → Kisumu 10:00 AM boarding at Railways Godown",m:"22 min ago"},
+  {t:"Mash Poa — Nairobi → Kampala 08:00 PM night bus now boarding",m:"31 min ago"},
+  {t:"2NK Sacco — Nyeri → Nairobi 07:00 AM departed Mbaki House HQ",m:"45 min ago"},
+  {t:"Mololine — Nakuru → Eldoret 09:00 AM departed Main Bus Park",m:"1h ago"},
+  {t:"Dreamliner — Nairobi → Mombasa 09:00 AM at Voi (on schedule)",m:"1h ago"},
+  {t:"Tahmeed — Mombasa → Malindi 11:00 AM boarding at Uhuru Road",m:"2h ago"},
+];
+const terminals=[
+  {n:"Nairobi Railways",s:"BUSY",c:"tag-y"},
+  {n:"Nairobi Nyamakima",s:"BUSY",c:"tag-y"},
+  {n:"Mombasa Mwembe Tayari",s:"NORMAL",c:"tag-g"},
+  {n:"Nakuru Main Bus Park",s:"NORMAL",c:"tag-g"},
+  {n:"Kisumu Bus Park",s:"NORMAL",c:"tag-g"},
+  {n:"Nyeri Gakere Road",s:"QUIET",c:"tag-b"},
+  {n:"Eldoret Main Stage",s:"NORMAL",c:"tag-g"},
+];
+ $("liveFeed").innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+  <b>Recent Departures</b><span class="tag tag-g">LIVE</span></div>`+
+  liveData.map(l=>`<div class="feeditem"><div class="fico"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="12" rx="2"/><circle cx="7" cy="19" r="1.6"/><circle cx="17" cy="19" r="1.6"/></svg></div><div><div class="ft">${l.t}</div><div class="ftime">${l.m}</div></div></div>`).join("");
+ $("terminalList").innerHTML=terminals.map(t=>`<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line);font-size:.82rem"><span>${t.n}</span><span class="tag ${t.c}">${t.s}</span></div>`).join("");
+
+/* ===== TOAST ===== */
+let toastTimer;
+function toast(msg){const t=$("toast");t.textContent=msg;t.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove("show"),2800)}
+
+/* ===== SCROLL REVEAL ===== */
+const obs=new IntersectionObserver((entries)=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add("vis")})},{threshold:.15});
+document.querySelectorAll(".reveal").forEach(el=>obs.observe(el));
+
+/* ===== AUTO-REFRESH LIVE FEED ===== */
+setInterval(()=>{
+  const saccos=["4NTE","Mololine","2NK","Modern Coast","Easy Coach","Mash Poa","Dreamliner","Tahmeed","Guardian","Chania Classic"];
+  const towns=["Nairobi","Nakuru","Mombasa","Kisumu","Eldoret","Thika","Nyeri","Kericho"];
+  const s=saccos[Math.floor(Math.random()*saccos.length)];
+  const t=towns[Math.floor(Math.random()*towns.length)];
+  const mins=Math.floor(Math.random()*5)+1;
+  const feed=$("liveFeed");
+  const newEl=document.createElement("div");newEl.className="feeditem";
+  newEl.innerHTML=`<div class="fico"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="12" rx="2"/><circle cx="7" cy="19" r="1.6"/><circle cx="17" cy="19" r="1.6"/></svg></div><div><div class="ft">${s} — ${t} stage update: normal operations</div><div class="ftime">${mins} min ago</div></div>`;
+  const existing=feed.querySelectorAll(".feeditem");
+  if(existing.length>0)existing[0].before(newEl);
+  if(feed.querySelectorAll(".feeditem").length>10)feed.lastElementChild.remove();
+},15000);
+</script>
 </body>
 </html>
