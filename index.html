@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CustomerCare — Passenger Complaints & Refunds</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navy: { 50:'#f0f4f8', 100:'#d9e2ec', 200:'#bcccdc', 300:'#9fb3c8', 400:'#829ab1', 500:'#627d98', 600:'#486581', 700:'#334e68', 800:'#243b53', 900:'#102a43' },
+                        accent: { 500:'#1a5276', 600:'#154360', 700:'#0e2f44' },
+                        gold: { 400:'#f6c343', 500:'#d4a017', 600:'#b8860b' }
+                    },
+                    fontFamily: {
+                        sans: ['DM Sans', 'sans-serif'],
+                        display: ['Oswald', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        html { scroll-behavior: smooth; }
+        body { font-family: 'DM Sans', sans-serif; }
+        .font-display { font-family: 'Oswald', sans-serif; }
+        @keyframes fadeUp {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        .fade-up { animation: fadeUp 0.8s ease-out forwards; }
+        .fade-up-delay-1 { animation: fadeUp 0.8s ease-out 0.15s forwards; opacity: 0; }
+        .fade-up-delay-2 { animation: fadeUp 0.8s ease-out 0.3s forwards; opacity: 0; }
+        .fade-up-delay-3 { animation: fadeUp 0.8s ease-out 0.45s forwards; opacity: 0; }
+
+        @keyframes plane {
+            0% { transform: translateX(-100%) translateY(10px); opacity: 0; }
+            10% { opacity: 0.15; }
+            90% { opacity: 0.15; }
+            100% { transform: translateX(100vw) translateY(-10px); opacity: 0; }
+        }
+        .plane-fly { animation: plane 12s linear infinite; }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #1a5276;
+            box-shadow: 0 0 0 3px rgba(26, 82, 118, 0.12);
+        }
+
+        .toast-enter { animation: toastIn 0.4s ease-out forwards; }
+        @keyframes toastIn {
+            0% { opacity: 0; transform: translateY(-10px) scale(0.95); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .toast-exit { animation: toastOut 0.3s ease-in forwards; }
+        @keyframes toastOut {
+            0% { opacity: 1; transform: translateY(0) scale(1); }
+            100% { opacity: 0; transform: translateY(-10px) scale(0.95); }
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .spinner { animation: spin 0.7s linear infinite; }
+    </style>
+</head>
+<body class="bg-navy-50 text-navy-900 min-h-screen flex flex-col">
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="fixed top-6 right-6 z-[999] flex flex-col gap-3"></div>
+
+    <!-- Top Bar -->
+    <div class="bg-navy-900 text-white text-xs py-2 px-6 sm:px-10 flex items-center justify-between">
+        <div class="flex items-center gap-4">
+            
+            <span class="hidden sm:flex items-center gap-1.5"><i data-lucide="mail" class="w-3 h-3"></i> refundcustomerservicehelpdesk@gmail.com</span>
+        </div>
+        <div class="flex items-center gap-3">
+            <span class="hidden md:inline opacity-70">Complaint Reference No.</span>
+            <span class="bg-navy-700 px-2 py-0.5 rounded text-[10px] font-mono tracking-wider" id="ref-number">SL-2025-000000</span>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="bg-white border-b border-navy-100 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-6 sm:px-10 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-navy-900 rounded-lg flex items-center justify-center">
+                    <i data-lucide="plane" class="w-5 h-5 text-white -rotate-45"></i>
+                </div>
+                <div>
+                    <h1 class="font-display text-xl sm:text-2xl font-semibold tracking-tight leading-none text-navy-900">CustomerCare</h1>
+                    <p class="text-[9px] tracking-[0.25em] uppercase text-navy-400 font-medium">Passenger Complaints & Refunds Portal</p>
+                </div>
+            </div>
+            <nav class="hidden md:flex items-center gap-6 text-sm text-navy-600">
+                <a href="#apology" class="hover:text-navy-900 transition-colors">Our Apology</a>
+                <a href="#form-section" class="hover:text-navy-900 transition-colors">File a Complaint</a>
+                <a href="#process" class="hover:text-navy-900 transition-colors">Process</a>
+                <a href="#faq" class="hover:text-navy-900 transition-colors">FAQ</a>
+            </nav>
+            <button id="mobile-menu-btn" class="md:hidden p-2 text-navy-600 hover:text-navy-900">
+                <i data-lucide="menu" class="w-5 h-5"></i>
+            </button>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden border-t border-navy-100 bg-white px-6 pb-4">
+            <a href="#apology" class="block py-2.5 text-sm text-navy-600 hover:text-navy-900 border-b border-navy-50">Our Apology</a>
+            <a href="#form-section" class="block py-2.5 text-sm text-navy-600 hover:text-navy-900 border-b border-navy-50">File a Complaint</a>
+            <a href="#process" class="block py-2.5 text-sm text-navy-600 hover:text-navy-900 border-b border-navy-50">Process</a>
+            <a href="#faq" class="block py-2.5 text-sm text-navy-600 hover:text-navy-900">FAQ</a>
+        </div>
+    </header>
+
+    <!-- Hero / Apology Section -->
+    <section id="apology" class="relative bg-navy-900 text-white overflow-hidden">
+        <div class="absolute inset-0 opacity-5">
+            <div class="plane-fly absolute top-1/3 left-0">
+                <i data-lucide="plane" class="w-16 h-16 text-white -rotate-45"></i>
+            </div>
+        </div>
+        <div class="absolute top-0 right-0 w-96 h-96 bg-navy-700 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 opacity-30"></div>
+        <div class="absolute bottom-0 left-0 w-72 h-72 bg-navy-600 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2 opacity-20"></div>
+
+        <div class="relative max-w-4xl mx-auto px-6 sm:px-10 py-16 sm:py-24 text-center">
+            <div class="fade-up inline-flex items-center gap-2 bg-navy-800/60 border border-navy-600/40 rounded-full px-4 py-1.5 mb-6">
+                <i data-lucide="shield-check" class="w-4 h-4 text-gold-400"></i>
+                <span class="text-xs tracking-wider uppercase text-navy-200">Official Complaints Portal</span>
+            </div>
+
+            <h2 class="fade-up-delay-1 font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light tracking-tight leading-tight mb-6">
+                We Are Truly <span class="text-gold-400 font-medium">Sorry</span><br>For Your Experience
+            </h2>
+
+            <p class="fade-up-delay-2 text-navy-300 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed mb-8">
+                 Every passenger's comfort and satisfaction is our highest priority. We sincerely apologize for any inconvenience you may have experienced during your journey with us. Your feedback helps us do better.
+            </p>
+
+            <div class="fade-up-delay-3 flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a href="#form-section" class="bg-white text-navy-900 px-8 py-3.5 rounded-lg text-sm font-semibold tracking-wide hover:bg-navy-50 transition-colors flex items-center gap-2 shadow-lg">
+                    <i data-lucide="file-text" class="w-4 h-4"></i>
+                    FILE A COMPLAINT
+                </a>
+                <a href="#process" class="border border-navy-500 text-navy-200 px-8 py-3.5 rounded-lg text-sm font-medium tracking-wide hover:bg-navy-800 transition-colors flex items-center gap-2">
+                    <i data-lucide="info" class="w-4 h-4"></i>
+                    LEARN MORE
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Apology Cards -->
+    <section class="bg-white border-b border-navy-100">
+        <div class="max-w-6xl mx-auto px-6 sm:px-10 py-12 sm:py-16">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="text-center p-6 rounded-xl bg-navy-50/50 border border-navy-100 hover:shadow-md transition-shadow">
+                    <div class="w-14 h-14 bg-navy-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i data-lucide="heart-handshake" class="w-6 h-6 text-navy-600"></i>
+                    </div>
+                    <h3 class="font-display text-lg font-medium tracking-tight mb-2">Our Sincere Apologies</h3>
+                    <p class="text-sm text-navy-500 leading-relaxed">We understand how frustrating travel disruptions can be, and we are genuinely sorry for letting you down.</p>
+                </div>
+                <div class="text-center p-6 rounded-xl bg-navy-50/50 border border-navy-100 hover:shadow-md transition-shadow">
+                    <div class="w-14 h-14 bg-navy-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i data-lucide="ear" class="w-6 h-6 text-navy-600"></i>
+                    </div>
+                    <h3 class="font-display text-lg font-medium tracking-tight mb-2">We Are Listening</h3>
+                    <p class="text-sm text-navy-500 leading-relaxed">Every complaint is reviewed personally by our customer relations team. Your voice matters to us.</p>
+                </div>
+                <div class="text-center p-6 rounded-xl bg-navy-50/50 border border-navy-100 hover:shadow-md transition-shadow">
+                    <div class="w-14 h-14 bg-navy-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i data-lucide="badge-check" class="w-6 h-6 text-navy-600"></i>
+                    </div>
+                    <h3 class="font-display text-lg font-medium tracking-tight mb-2">Fair Resolution</h3>
+                    <p class="text-sm text-navy-500 leading-relaxed">We are committed to providing fair and timely resolutions, including full or partial refunds where applicable.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- COMPLAINT FORM — Connected to Web3Forms      -->
+    <!-- ============================================ -->
+    <section id="form-section" class="bg-navy-50 py-12 sm:py-20">
+        <div class="max-w-3xl mx-auto px-6 sm:px-10">
+
+            <div class="text-center mb-10">
+                <p class="text-xs tracking-[0.2em] uppercase text-navy-400 font-medium mb-2">Complaint Form</p>
+                <h2 class="font-display text-2xl sm:text-3xl font-light tracking-tight mb-3">Tell Us What Happened</h2>
+                <p class="text-sm text-navy-500 max-w-lg mx-auto">Please fill out the form below with as much detail as possible. All fields marked with <span class="text-red-500">*</span> are required.</p>
+            </div>
+
+            <!--
+                WEB3FORMS INTEGRATION POINTS:
+                1. action="https://api.web3forms.com/submit"
+                2. method="POST"
+                3. Hidden input: access_key
+                4. Hidden input: subject (email subject line)
+                5. Hidden input: botcheck (spam trap — must stay empty)
+                6. Every visible field has a "name" attribute — Web3Forms uses these as labels
+            -->
+            <form id="complaint-form" action="https://api.web3forms.com/submit" method="POST">
+
+                <!-- ===== Web3Forms Hidden Fields ===== -->
+                <!-- REPLACE the value below with YOUR access key from web3forms.com -->
+                <input type="hidden" name="access_key" value="82efac60-681d-4beb-ac13-17c5719f00f7">
+                <!-- This controls the email subject line you'll see in your inbox -->
+                <input type="hidden" name="subject" value="New AirCanada Complaint — Ref #SL-2025">
+                <!-- Spam trap: bots fill hidden fields, humans don't. If filled, Web3Forms blocks it. -->
+                <input type="checkbox" name="botcheck" class="hidden" style="display:none">
+
+                <!-- Form Header (visual only) -->
+                <div class="bg-navy-900 px-6 sm:px-8 py-5 flex items-center gap-3 rounded-t-2xl">
+                    <i data-lucide="clipboard-list" class="w-5 h-5 text-gold-400"></i>
+                    <div>
+                        <h3 class="text-white font-semibold text-sm tracking-wide">PASSENGER COMPLAINT & REFUND REQUEST</h3>
+                        <p class="text-navy-400 text-xs mt-0.5">Form SL-CR-2025 | Confidential</p>
+                    </div>
+                </div>
+
+                <div class="bg-white border-x border-navy-100 px-6 sm:px-8 py-8 space-y-8">
+
+                    <!-- Complaint Type -->
+                    <div>
+                        <label class="block text-sm font-semibold text-navy-800 mb-2">Type of Complaint <span class="text-red-500">*</span></label>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <label class="flex items-center gap-3 p-3.5 rounded-lg border-2 border-navy-200 cursor-pointer hover:border-navy-400 transition-colors has-[:checked]:border-navy-900 has-[:checked]:bg-navy-50">
+                                <input type="radio" name="complaint_type" value="Flight Delay" class="accent-navy-900" required>
+                                <div>
+                                    <span class="text-sm font-medium text-navy-800">Flight Delay</span>
+                                    <p class="text-[11px] text-navy-400">Delayed departure or arrival</p>
+                                </div>
+                            </label>
+                            <label class="flex items-center gap-3 p-3.5 rounded-lg border-2 border-navy-200 cursor-pointer hover:border-navy-400 transition-colors has-[:checked]:border-navy-900 has-[:checked]:bg-navy-50">
+                                <input type="radio" name="complaint_type" value="Flight Cancellation" class="accent-navy-900">
+                                <div>
+                                    <span class="text-sm font-medium text-navy-800">Flight Cancellation</span>
+                                    <p class="text-[11px] text-navy-400">Cancelled flight</p>
+                                </div>
+                            </label>
+                            <label class="flex items-center gap-3 p-3.5 rounded-lg border-2 border-navy-200 cursor-pointer hover:border-navy-400 transition-colors has-[:checked]:border-navy-900 has-[:checked]:bg-navy-50">
+                                <input type="radio" name="complaint_type" value="Baggage Issue" class="accent-navy-900">
+                                <div>
+                                    <span class="text-sm font-medium text-navy-800">Baggage Issue</span>
+                                    <p class="text-[11px] text-navy-400">Lost, delayed, or damaged</p>
+                                </div>
+                            </label>
+                            <label class="flex items-center gap-3 p-3.5 rounded-lg border-2 border-navy-200 cursor-pointer hover:border-navy-400 transition-colors has-[:checked]:border-navy-900 has-[:checked]:bg-navy-50">
+                                <input type="radio" name="complaint_type" value="Poor Service" class="accent-navy-900">
+                                <div>
+                                    <span class="text-sm font-medium text-navy-800">Poor Service</span>
+                                    <p class="text-[11px] text-navy-400">In-flight or ground staff</p>
+                                </div>
+                            </label>
+                            <label class="flex items-center gap-3 p-3.5 rounded-lg border-2 border-navy-200 cursor-pointer hover:border-navy-400 transition-colors has-[:checked]:border-navy-900 has-[:checked]:bg-navy-50">
+                                <input type="radio" name="complaint_type" value="Refund Request" class="accent-navy-900">
+                                <div>
+                                    <span class="text-sm font-medium text-navy-800">Refund Request</span>
+                                    <p class="text-[11px] text-navy-400">Ticket or service refund</p>
+                                </div>
+                            </label>
+                            <label class="flex items-center gap-3 p-3.5 rounded-lg border-2 border-navy-200 cursor-pointer hover:border-navy-400 transition-colors has-[:checked]:border-navy-900 has-[:checked]:bg-navy-50">
+                                <input type="radio" name="complaint_type" value="Other" class="accent-navy-900">
+                                <div>
+                                    <span class="text-sm font-medium text-navy-800">Other</span>
+                                    <p class="text-[11px] text-navy-400">Any other concern</p>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="border-t border-navy-100"></div>
+
+                    <!-- Flight Details (Optional) -->
+                    <div>
+                        <label class="block text-sm font-semibold text-navy-800 mb-3">Flight Details <span class="text-navy-400 font-normal text-xs">(if applicable)</span></label>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-xs font-medium text-navy-500 mb-1.5">Booking Reference</label>
+                                <input type="text" name="booking_reference" placeholder="e.g. ABC123" class="w-full px-4 py-3 rounded-lg border-2 border-navy-200 text-sm placeholder:text-navy-300 transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-navy-500 mb-1.5">Flight Number</label>
+                                <input type="text" name="flight_number" placeholder="e.g. SL-402" class="w-full px-4 py-3 rounded-lg border-2 border-navy-200 text-sm placeholder:text-navy-300 transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-navy-500 mb-1.5">Date of Flight</label>
+                                <input type="date" name="flight_date" class="w-full px-4 py-3 rounded-lg border-2 border-navy-200 text-sm text-navy-600 transition-all">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="border-t border-navy-100"></div>
+
+                    <!-- Passenger Information -->
+                    <div>
+                        <div class="flex items-center gap-2 mb-4">
+                            <i data-lucide="user" class="w-4 h-4 text-navy-400"></i>
+                            <label class="text-sm font-semibold text-navy-800">Passenger Information</label>
+                        </div>
+                        <div class="space-y-4">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-medium text-navy-500 mb-1.5">Full Name <span class="text-red-500">*</span></label>
+                                    <input type="text" id="passenger_name" name="Full Name" required placeholder="As on your boarding pass" class="w-full px-4 py-3 rounded-lg border-2 border-navy-200 text-sm placeholder:text-navy-300 transition-all">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-medium text-navy-500 mb-1.5">Phone Number <span class="text-red-500">*</span></label>
+                                    <input type="tel" id="phone_number" name="Phone Number" required placeholder="+1 (555) 000-0000" class="w-full px-4 py-3 rounded-lg border-2 border-navy-200 text-sm placeholder:text-navy-300 transition-all">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-navy-500 mb-1.5">Email Address <span class="text-red-500">*</span></label>
+                                <input type="email" id="email" name="Email" required placeholder="you@example.com" class="w-full px-4 py-3 rounded-lg border-2 border-navy-200 text-sm placeholder:text-navy-300 transition-all">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="border-t border-navy-100"></div>
+
+                    <!-- Complaint Summary -->
+                    <div>
+                        <div class="flex items-center gap-2 mb-4">
+                            <i data-lucide="message-square-text" class="w-4 h-4 text-navy-400"></i>
+                            <label class="text-sm font-semibold text-navy-800">Complaint Summary <span class="text-red-500">*</span></label>
+                        </div>
+                        <textarea id="complaint_summary" name="Complaint Summary" required rows="6" placeholder="Please describe your experience in detail. Include what happened, when it occurred, and how it affected you. The more information you provide, the faster we can resolve your concern..." class="w-full px-4 py-3 rounded-lg border-2 border-navy-200 text-sm placeholder:text-navy-300 transition-all resize-vertical leading-relaxed"></textarea>
+                        <div class="flex justify-between mt-1.5">
+                            <p class="text-[11px] text-navy-400">Minimum 30 characters</p>
+                            <p class="text-[11px] text-navy-400"><span id="char-count">0</span>/2000</p>
+                        </div>
+                    </div>
+
+                    <div class="border-t border-navy-100"></div>
+
+                    <!-- Acknowledgement -->
+                    <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 flex gap-3">
+                        <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5"></i>
+                        <div>
+                            <p class="text-sm font-medium text-amber-800 mb-1">Important Notice</p>
+                            <p class="text-xs text-amber-700 leading-relaxed">By submitting this form, you confirm that the information provided is accurate and truthful. Filing a false complaint may result in legal action. Submission does not guarantee a refund — each case is reviewed individually.</p>
+                        </div>
+                    </div>
+
+                    <!-- Checkbox -->
+                    <label class="flex items-start gap-3 cursor-pointer group">
+                        <input type="checkbox" id="agree-terms" class="mt-0.5 accent-navy-900 w-4 h-4">
+                        <span class="text-xs text-navy-500 leading-relaxed group-hover:text-navy-700 transition-colors">I acknowledge that I have read and understood the <a href="#" class="underline text-navy-700 hover:text-navy-900">Terms & Conditions</a> and <a href="#" class="underline text-navy-700 hover:text-navy-900">Privacy Policy</a> of . <span class="text-red-500">*</span></span>
+                    </label>
+
+                    <!-- Submit Buttons -->
+                    <div class="flex flex-col sm:flex-row items-center gap-4 pt-2">
+                        <button type="submit" id="submit-btn" class="w-full sm:w-auto bg-navy-900 text-white px-10 py-4 rounded-lg text-sm font-semibold tracking-wide hover:bg-navy-800 transition-all flex items-center justify-center gap-2 shadow-lg shadow-navy-900/20 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                            <i data-lucide="send" class="w-4 h-4" id="submit-icon"></i>
+                            <span id="submit-text">SUBMIT COMPLAINT</span>
+                        </button>
+                        <button type="reset" id="reset-btn" class="w-full sm:w-auto border-2 border-navy-200 text-navy-600 px-8 py-4 rounded-lg text-sm font-medium tracking-wide hover:border-navy-400 hover:text-navy-800 transition-all">
+                            CLEAR FORM
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Bottom border to close the card shape -->
+                <div class="bg-white border-x border-b border-navy-100 rounded-b-2xl h-2"></div>
+            </form>
+        </div>
+    </section>
+
+    <!-- Process Section -->
+    <section id="process" class="bg-white py-12 sm:py-20">
+        <div class="max-w-5xl mx-auto px-6 sm:px-10">
+            <div class="text-center mb-12">
+                <p class="text-xs tracking-[0.2em] uppercase text-navy-400 font-medium mb-2">How It Works</p>
+                <h2 class="font-display text-2xl sm:text-3xl font-light tracking-tight">Our Resolution Process</h2>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <div class="relative text-center">
+                    <div class="w-12 h-12 bg-navy-900 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-sm font-bold">1</div>
+                    <h3 class="font-semibold text-sm mb-1">Submit</h3>
+                    <p class="text-xs text-navy-500 leading-relaxed">Fill out the complaint form with all relevant details</p>
+                    <div class="hidden md:block absolute top-6 left-[60%] w-[80%] border-t-2 border-dashed border-navy-200"></div>
+                </div>
+                <div class="relative text-center">
+                    <div class="w-12 h-12 bg-navy-900 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-sm font-bold">2</div>
+                    <h3 class="font-semibold text-sm mb-1">Review</h3>
+                    <p class="text-xs text-navy-500 leading-relaxed">Our team reviews your case within 2 business days</p>
+                    <div class="hidden md:block absolute top-6 left-[60%] w-[80%] border-t-2 border-dashed border-navy-200"></div>
+                </div>
+                <div class="relative text-center">
+                    <div class="w-12 h-12 bg-navy-900 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-sm font-bold">3</div>
+                    <h3 class="font-semibold text-sm mb-1">Investigate</h3>
+                    <p class="text-xs text-navy-500 leading-relaxed">We gather all necessary information from relevant departments</p>
+                    <div class="hidden md:block absolute top-6 left-[60%] w-[80%] border-t-2 border-dashed border-navy-200"></div>
+                </div>
+                <div class="text-center">
+                    <div class="w-12 h-12 bg-gold-500 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-sm font-bold">4</div>
+                    <h3 class="font-semibold text-sm mb-1">Resolve</h3>
+                    <p class="text-xs text-navy-500 leading-relaxed">Receive your resolution via email within 14 business days</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CEO Apology -->
+    <section class="bg-navy-900 text-white py-12 sm:py-16">
+        <div class="max-w-3xl mx-auto px-6 sm:px-10 text-center">
+            <div class="w-20 h-20 bg-navy-700 rounded-full flex items-center justify-center mx-auto mb-6 border-2 border-navy-500">
+                <i data-lucide="user-circle" class="w-10 h-10 text-navy-300"></i>
+            </div>
+            <blockquote class="font-display text-lg sm:text-xl font-light leading-relaxed italic mb-6 text-navy-200">
+                "On behalf of everyone at , I want to personally apologize for the experience you've had. We built this airline on the promise of exceptional service, and when we fall short, it hurts all of us. Please know that your complaint is not just a number to us — it is a chance to make things right and ensure it never happens again."
+            </blockquote>
+            <div>
+                <p class="font-semibold text-white text-sm">James R. Whitfield</p>
+                <p class="text-xs text-navy-400">Chief Executive Officer, </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="bg-navy-50 py-12 sm:py-20">
+        <div class="max-w-3xl mx-auto px-6 sm:px-10">
+            <div class="text-center mb-10">
+                <p class="text-xs tracking-[0.2em] uppercase text-navy-400 font-medium mb-2">Support</p>
+                <h2 class="font-display text-2xl sm:text-3xl font-light tracking-tight">Frequently Asked Questions</h2>
+            </div>
+            <div class="space-y-3" id="faq-container">
+                <div class="faq-item bg-white rounded-xl border border-navy-100 overflow-hidden">
+                    <button class="faq-toggle w-full flex items-center justify-between px-6 py-4 text-left hover:bg-navy-50/50 transition-colors" onclick="toggleFaq(this)">
+                        <span class="text-sm font-medium text-navy-800 pr-4">How long does it take to process a refund?</span>
+                        <i data-lucide="chevron-down" class="w-4 h-4 text-navy-400 flex-shrink-0 transition-transform duration-200"></i>
+                    </button>
+                    <div class="faq-content hidden px-6 pb-4">
+                        <p class="text-sm text-navy-500 leading-relaxed">We sincerely apologize for the wait. Refund processing typically takes 7–14 business days after your complaint has been reviewed and approved. In some complex cases, it may take up to 30 days. We understand this may feel long, and we are working hard to speed up our processes.</p>
+                    </div>
+                </div>
+                <div class="faq-item bg-white rounded-xl border border-navy-100 overflow-hidden">
+                    <button class="faq-toggle w-full flex items-center justify-between px-6 py-4 text-left hover:bg-navy-50/50 transition-colors" onclick="toggleFaq(this)">
+                        <span class="text-sm font-medium text-navy-800 pr-4">Will I receive updates on my complaint status?</span>
+                        <i data-lucide="chevron-down" class="w-4 h-4 text-navy-400 flex-shrink-0 transition-transform duration-200"></i>
+                    </button>
+                    <div class="faq-content hidden px-6 pb-4">
+                        <p class="text-sm text-navy-500 leading-relaxed">Yes, absolutely. You will receive an automated confirmation email immediately after submission, and our team will send you status updates via email at each stage of the process. You can also contact our helpline with your reference number for real-time updates.</p>
+                    </div>
+                </div>
+                <div class="faq-item bg-white rounded-xl border border-navy-100 overflow-hidden">
+                    <button class="faq-toggle w-full flex items-center justify-between px-6 py-4 text-left hover:bg-navy-50/50 transition-colors" onclick="toggleFaq(this)">
+                        <span class="text-sm font-medium text-navy-800 pr-4">What compensation am I entitled to?</span>
+                        <i data-lucide="chevron-down" class="w-4 h-4 text-navy-400 flex-shrink-0 transition-transform duration-200"></i>
+                    </button>
+                    <div class="faq-content hidden px-6 pb-4">
+                        <p class="text-sm text-navy-500 leading-relaxed">Compensation depends on the nature and severity of the issue. This may include full or partial refunds, travel vouchers, meal allowances, hotel accommodations for overnight delays, or future flight credits. Each case is evaluated individually and fairly.</p>
+                    </div>
+                </div>
+                <div class="faq-item bg-white rounded-xl border border-navy-100 overflow-hidden">
+                    <button class="faq-toggle w-full flex items-center justify-between px-6 py-4 text-left hover:bg-navy-50/50 transition-colors" onclick="toggleFaq(this)">
+                        <span class="text-sm font-medium text-navy-800 pr-4">Can I submit a complaint for someone else?</span>
+                        <i data-lucide="chevron-down" class="w-4 h-4 text-navy-400 flex-shrink-0 transition-transform duration-200"></i>
+                    </button>
+                    <div class="faq-content hidden px-6 pb-4">
+                        <p class="text-sm text-navy-500 leading-relaxed">Yes, you may file on behalf of another passenger, provided you have their consent and accurate details (name as on boarding pass, booking reference, etc.). Please note that all correspondence regarding the complaint will be sent to the email address provided in the form.</p>
+                    </div>
+                </div>
+                <div class="faq-item bg-white rounded-xl border border-navy-100 overflow-hidden">
+                    <button class="faq-toggle w-full flex items-center justify-between px-6 py-4 text-left hover:bg-navy-50/50 transition-colors" onclick="toggleFaq(this)">
+                        <span class="text-sm font-medium text-navy-800 pr-4">What if I'm not satisfied with the resolution?</span>
+                        <i data-lucide="chevron-down" class="w-4 h-4 text-navy-400 flex-shrink-0 transition-transform duration-200"></i>
+                    </button>
+                    <div class="faq-content hidden px-6 pb-4">
+                        <p class="text-sm text-navy-500 leading-relaxed">We are sorry if our initial response does not meet your expectations. You may request an escalation to our Senior Customer Relations team by replying to your resolution email. If the matter remains unresolved, you may also contact the relevant aviation authority in your jurisdiction.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="bg-white py-12 sm:py-16 border-t border-navy-100">
+        <div class="max-w-2xl mx-auto px-6 sm:px-10 text-center">
+            <i data-lucide="heart" class="w-8 h-8 text-red-400 mx-auto mb-4"></i>
+            <h2 class="font-display text-xl sm:text-2xl font-light tracking-tight mb-3">We Haven't Forgotten About You</h2>
+            <p class="text-sm text-navy-500 leading-relaxed mb-6">If you'd prefer to speak with someone directly, our caring customer support team is available 24/7. We're here to listen, and we're here to help.</p>
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+               
+                <a href="mailto:refundcustomerservicehelpdesk@gmail.com" class="border-2 border-navy-200 text-navy-700 px-8 py-3.5 rounded-lg text-sm font-medium tracking-wide hover:border-navy-400 transition-colors flex items-center gap-2">
+                    <i data-lucide="mail" class="w-4 h-4"></i>
+                    EMAIL US
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-navy-900 text-navy-400 mt-auto">
+        <div class="max-w-7xl mx-auto px-6 sm:px-10 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-10">
+                <div class="md:col-span-2">
+                    <div class="flex items-center gap-2 mb-4">
+                        <div class="w-8 h-8 bg-navy-700 rounded-lg flex items-center justify-center">
+                            <i data-lucide="plane" class="w-4 h-4 text-white -rotate-45"></i>
+                        </div>
+                        <span class="font-display text-lg font-semibold text-white tracking-tight">CustomerCare</span>
+                    </div>
+                    <p class="text-sm leading-relaxed max-w-md mb-4">Connecting people and places since 1987. We are committed to making every journey safe, comfortable, and memorable. When we fall short of that promise, we take full responsibility.</p>
+                    <div class="flex gap-3">
+                        <a href="#" class="w-9 h-9 bg-navy-800 rounded-lg flex items-center justify-center hover:bg-navy-700 transition-colors"><i data-lucide="twitter" class="w-4 h-4 text-navy-300"></i></a>
+                        <a href="#" class="w-9 h-9 bg-navy-800 rounded-lg flex items-center justify-center hover:bg-navy-700 transition-colors"><i data-lucide="facebook" class="w-4 h-4 text-navy-300"></i></a>
+                        <a href="#" class="w-9 h-9 bg-navy-800 rounded-lg flex items-center justify-center hover:bg-navy-700 transition-colors"><i data-lucide="instagram" class="w-4 h-4 text-navy-300"></i></a>
+                        <a href="#" class="w-9 h-9 bg-navy-800 rounded-lg flex items-center justify-center hover:bg-navy-700 transition-colors"><i data-lucide="linkedin" class="w-4 h-4 text-navy-300"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-xs tracking-[0.2em] uppercase text-navy-300 font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2.5 text-sm">
+                        <li><a href="#" class="hover:text-white transition-colors">Manage Booking</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Flight Status</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Check-In Online</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Baggage Policy</a></li>
+                        <li><a href="#form-section" class="hover:text-white transition-colors">File a Complaint</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-xs tracking-[0.2em] uppercase text-navy-300 font-semibold mb-4">Legal</h4>
+                    <ul class="space-y-2.5 text-sm">
+                        <li><a href="#" class="hover:text-white transition-colors">Terms & Conditions</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Cookie Policy</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Passenger Rights</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Accessibility</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-navy-800 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <p class="text-xs text-navy-500">© 2026 CustomerCare. All rights reserved.</p>
+                <p class="text-xs text-navy-600">ICAO: SKL | IATA: SL | Callsign: CustomerCare</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Success Modal -->
+    <div id="success-modal" class="fixed inset-0 z-[998] hidden items-center justify-center p-6">
+        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="closeModal()"></div>
+        <div class="relative bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 text-center transform scale-95 opacity-0 transition-all duration-300" id="modal-content">
+            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-5">
+                <i data-lucide="check-circle-2" class="w-8 h-8 text-green-600"></i>
+            </div>
+            <h3 class="font-display text-2xl font-medium tracking-tight mb-2">Complaint Submitted</h3>
+            <p class="text-sm text-navy-500 leading-relaxed mb-4">We are truly sorry for what you've experienced. Your complaint has been received and our team will begin reviewing it shortly.</p>
+            <div class="bg-navy-50 rounded-lg p-4 mb-6">
+                <p class="text-[10px] tracking-wider uppercase text-navy-400 mb-1">Your Reference Number</p>
+                <p class="font-mono text-lg font-bold text-navy-900 tracking-wider" id="modal-ref">SL-2025-000000</p>
+            </div>
+            <p class="text-xs text-navy-400 mb-6">A confirmation email has been sent to <span class="font-medium text-navy-600" id="modal-email">—</span>. Please keep your reference number for future correspondence.</p>
+            <button onclick="closeModal()" class="bg-navy-900 text-white px-8 py-3 rounded-lg text-sm font-semibold tracking-wide hover:bg-navy-800 transition-colors">
+                GOT IT, THANK YOU
+            </button>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- JavaScript — handles validation, sends to    -->
+    <!-- Web3Forms via fetch, then shows success modal -->
+    <!-- ============================================ -->
+    <script>
+        lucide.createIcons();
+
+        // ── Reference Number ──
+        function generateRef() {
+            const num = String(Math.floor(100000 + Math.random() * 900000));
+            return `SL-2025-${num}`;
+        }
+        let currentRef = generateRef();
+        document.getElementById('ref-number').textContent = currentRef;
+        document.getElementById('modal-ref').textContent = currentRef;
+
+        // ── Mobile Menu ──
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => mobileMenu.classList.add('hidden'));
+        });
+
+        // ── Character Counter ──
+        const textarea = document.getElementById('complaint_summary');
+        const charCount = document.getElementById('char-count');
+        textarea.addEventListener('input', () => {
+            const len = textarea.value.length;
+            charCount.textContent = len;
+            if (len > 2000) {
+                textarea.value = textarea.value.substring(0, 2000);
+                charCount.textContent = 2000;
+            }
+            validateForm();
+        });
+
+        // ── Form Validation ──
+        const agreeCheckbox = document.getElementById('agree-terms');
+        const submitBtn = document.getElementById('submit-btn');
+        const submitText = document.getElementById('submit-text');
+        const submitIcon = document.getElementById('submit-icon');
+
+        agreeCheckbox.addEventListener('change', validateForm);
+
+        function validateForm() {
+            const name = document.getElementById('passenger_name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone_number').value.trim();
+            const summary = textarea.value.trim();
+            const typeChecked = document.querySelector('input[name="complaint_type"]:checked');
+            const isValid = name && email && phone && summary.length >= 30 && typeChecked && agreeCheckbox.checked;
+            submitBtn.disabled = !isValid;
+        }
+
+        ['passenger_name', 'email', 'phone_number'].forEach(id => {
+            document.getElementById(id).addEventListener('input', validateForm);
+        });
+        document.querySelectorAll('input[name="complaint_type"]').forEach(radio => {
+            radio.addEventListener('change', validateForm);
+        });
+
+        // ── Form Submission → Web3Forms ──
+        const form = document.getElementById('complaint-form');
+
+        form.addEventListener('submit', async function (e) {
+            e.preventDefault();
+            if (submitBtn.disabled) return;
+
+            // Show loading state
+            submitBtn.disabled = true;
+            submitText.textContent = 'SUBMITTING...';
+            submitIcon.classList.add('spinner');
+
+            // Build FormData from the form (picks up every named input)
+            const formData = new FormData(form);
+
+            // Inject the live reference number into the email payload
+            formData.set('subject', `New AirCanada Complaint — Ref ${currentRef}`);
+
+            try {
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // ── Success ──
+                    const email = document.getElementById('email').value.trim();
+                    document.getElementById('modal-email').textContent = email;
+
+                    const modal = document.getElementById('success-modal');
+                    const content = document.getElementById('modal-content');
+                    modal.classList.remove('hidden');
+                    modal.classList.add('flex');
+                    requestAnimationFrame(() => {
+                        content.classList.remove('scale-95', 'opacity-0');
+                        content.classList.add('scale-100', 'opacity-100');
+                    });
+
+                    showToast('Your complaint has been submitted successfully.', 'success');
+
+                    // Reset form for next submission
+                    form.reset();
+                    charCount.textContent = '0';
+
+                    // Generate a fresh reference number
+                    currentRef = generateRef();
+                    document.getElementById('ref-number').textContent = currentRef;
+                    document.getElementById('modal-ref').textContent = currentRef;
+
+                } else {
+                    // Web3Forms returned an error
+                    showToast(data.message || 'Submission failed. Please try again.', 'error');
+                }
+
+            } catch (err) {
+                // Network error
+                showToast('Network error. Please check your connection and try again.', 'error');
+                console.error('Web3Forms error:', err);
+            }
+
+            // Restore button
+            submitText.textContent = 'SUBMIT COMPLAINT';
+            submitIcon.classList.remove('spinner');
+            validateForm();
+        });
+
+        // ── Reset Button ──
+        document.getElementById('reset-btn').addEventListener('click', () => {
+            charCount.textContent = '0';
+            submitBtn.disabled = true;
+        });
+
+        // ── Close Modal ──
+        function closeModal() {
+            const modal = document.getElementById('success-modal');
+            const content = document.getElementById('modal-content');
+            content.classList.remove('scale-100', 'opacity-100');
+            content.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }, 300);
+        }
+
+        // ── FAQ Toggle ──
+        function toggleFaq(btn) {
+            const item = btn.closest('.faq-item');
+            const content = item.querySelector('.faq-content');
+            const icon = btn.querySelector('[data-lucide="chevron-down"]');
+            const isOpen = !content.classList.contains('hidden');
+
+            document.querySelectorAll('.faq-content').forEach(c => c.classList.add('hidden'));
+            document.querySelectorAll('.faq-toggle [data-lucide="chevron-down"]').forEach(i => i.style.transform = '');
+
+            if (!isOpen) {
+                content.classList.remove('hidden');
+                icon.style.transform = 'rotate(180deg)';
+            }
+        }
+
+        // ── Toast Notifications ──
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            const colors = { success: 'bg-green-600', error: 'bg-red-600', info: 'bg-navy-900' };
+            const icons = { success: 'check-circle-2', error: 'alert-circle', info: 'info' };
+
+            toast.className = `toast-enter ${colors[type]} text-white px-5 py-3.5 rounded-xl shadow-2xl flex items-center gap-3 min-w-[280px] max-w-sm`;
+            toast.innerHTML = `
+                <i data-lucide="${icons[type]}" class="w-5 h-5 flex-shrink-0"></i>
+                <span class="text-sm font-medium leading-snug">${message}</span>
+            `;
+            container.appendChild(toast);
+            lucide.createIcons();
+
+            setTimeout(() => {
+                toast.classList.remove('toast-enter');
+                toast.classList.add('toast-exit');
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
+    </script>
+</body>
+</html>
